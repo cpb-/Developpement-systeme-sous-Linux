@@ -1,6 +1,8 @@
-# Exemples de mon livre "Développement système sous Linux" publié aux éditions Eyrolles
+# Développement système sous Linux
 
-## 4ème édition, juillet 2016
+## Exemples
+
+Exemples de mon livre (4ème édition, juillet 2016), publié aux éditions Eyrolles.
 
 
 Pour plus de détails, voir (http://www.blaess.fr/christophe/livres/programmation-systeme-sous-linux/)
