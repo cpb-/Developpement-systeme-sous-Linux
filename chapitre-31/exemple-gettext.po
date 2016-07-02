@@ -1,0 +1,12 @@
+msgid  "This is the first string in the first set\n"
+msgstr "Ceci est la premiere chaine du premier ensemble\n"
+
+msgid  "and here is the second string in the first set.\n"
+msgstr "et voici la seconde chaine du premier ensemble.\n"
+
+msgid  "Now let's have a look at the 1st string in 2nd set,\n"
+msgstr "A present regardons la 1ere chaine du 2eme ensemble,\n"
+
+msgid  "and finaly the second string in the second set.\n"
+msgstr "et finalement la seconde chaine du second ensemble.\n"
+

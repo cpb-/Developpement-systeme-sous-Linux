@@ -1,0 +1,37 @@
+#! /usr/bin/wish
+
+## Le titre de la fenetre est le premier argument recu
+## sur la ligne de commande.
+wm title . [lindex $argv 0]
+
+## Le haut de la boite de dialogue contient un libelle
+## fourni en second argument de la ligne de commande, et
+## une zone de saisie dont le contenu par defaut est
+## eventuellement fourni en troisieme argument.
+frame .haut -relief flat -borderwidth 2
+label .libelle -text [lindex $argv 1]
+entry .saisie -relief sunken -borderwidth 2
+.saisie insert 0 [lindex $argv 2]
+pack .libelle .saisie -in .haut -expand true -fill x
+
+## Le bas contient deux boutons, Ok et Annuler, chacun avec
+## sa procedure associee.
+frame .bts -relief sunken -borderwidth 2
+button .ok -text "Ok" -command bouton_ok
+button .annuler -text "Annuler" -command bouton_annuler
+pack .ok .annuler -side left -expand true -pady 3 -in .bts
+pack .haut .bts
+update
+
+proc bouton_ok {} {
+    ## La procedure associee a OK transmet la chaine lue
+    ## sur la sortie standard.
+    puts [.saisie get]
+    exit 0
+}
+
+proc bouton_annuler {} {
+    ## Si on annule, on n'ecrit rien sur la sortie standard.
+    ## On quitte simplement.
+    exit 0
+}

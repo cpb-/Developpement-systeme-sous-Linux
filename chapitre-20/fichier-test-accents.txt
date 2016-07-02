@@ -1,0 +1,4 @@
+Ceci est un fichier de test
+qui contient des caractères accentués.
+À à Ç ç É é Î î Ö ö Ù ù
+
