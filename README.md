@@ -7,11 +7,11 @@ Pour plus de détails, voir http://www.blaess.fr/christophe/livres/programmation
 
 Pour télécharger les exemples
 
-$ git clone https://github.com/cpb-/developpement-systeme-sous-linux
+$ git clone https://github.com/cpb-/Developpement-systeme-sous-linux
 
 Pour compiler les exemples en C :
 
-$ cd developpement-systeme-sous-linux/
+$ cd Developpement-systeme-sous-linux/
 $ make
 
 
