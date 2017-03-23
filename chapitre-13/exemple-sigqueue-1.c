@@ -46,7 +46,7 @@ int main (int argc, char * argv [])
 			}
 			break;
 		case 2 : 
-			if (sscanf(argv[2], "%d", & pid) != 1)
+			if (sscanf(argv[1], "%d", & pid) != 1)
 				usage(argv[0]);
 			numero = -SIGTERM;
 			valeur.sival_int = 0;
