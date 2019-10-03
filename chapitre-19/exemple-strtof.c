@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-strtof.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #define _GNU_SOURCE
@@ -16,28 +16,29 @@
 
 int main (void)
 {
-	char   chaine[128];
-	char * debut;
-	char * fin;
-	float  retour;
+	char   string[128];
+	char * start;
+	char * end;
+	float  value;
 	
 	setlocale(LC_ALL, "");
-	while (fgets(chaine, 128, stdin) != NULL) {
-		if (chaine[strlen(chaine) - 1] == '\n')
-			chaine[strlen(chaine) - 1] = '\0';
-		for (fin = debut = chaine; * fin != '\0'; debut = fin) {
+	while (fgets(string, 128, stdin) != NULL) {
+		if (string[strlen(string) - 1] == '\n')
+			string[strlen(string) - 1] = '\0';
+		for (end = start = string; * end != '\0'; start = end) {
  			errno = 0;
-			retour = strtof(debut, & fin);
-			if (fin == debut) {
+			value = strtof(start, & end);
+			if (end == start) {
 				fprintf(stdout, "Erreur \n");
 				break;
 			}	
 			if (errno == ERANGE)
 				fprintf(stdout, "Debordement ! \n");
 			else 
-				fprintf(stdout, "Lu : %f \n", retour);
+				fprintf(stdout, "Lu : %f \n", value);
 		}	
 	}
+
 	return EXIT_SUCCESS;
 }
 

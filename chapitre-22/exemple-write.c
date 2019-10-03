@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-write.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <errno.h>
@@ -17,30 +17,30 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#define TAILLE_BLOC	1024
-#define DEPASSEMENT	767
+#define BLOCK_SIZE    1024
+#define OVERRUN       767
 
 
-void gestionnaire (int numero)
+void signal_handler(int number)
 {
-	fprintf(stderr, "Signal %d recu : %s\n", numero, strsignal(numero));
+	fprintf(stderr, "Signal %d recu : %s\n", number, strsignal(number));
 }
 
 int main (void)
 {
-	struct rlimit   limite;
-	int                 fd;
-	char bloc[TAILLE_BLOC];
-	int          nb_ecrits;
+	struct rlimit limit;
+	int  fd;
+	char block[BLOCK_SIZE];
+	int  written;
 
-	signal(SIGXFSZ, gestionnaire);
+	signal(SIGXFSZ, signal_handler);
 
-	if (getrlimit(RLIMIT_FSIZE, & limite) != 0) {
+	if (getrlimit(RLIMIT_FSIZE, & limit) != 0) {
 		perror("getrlimit");
 		exit(EXIT_FAILURE);
 	}
-	limite.rlim_cur = 3 * TAILLE_BLOC + DEPASSEMENT;
-	if (setrlimit(RLIMIT_FSIZE, & limite) != 0) {
+	limit.rlim_cur = 3 * BLOCK_SIZE + OVERRUN;
+	if (setrlimit(RLIMIT_FSIZE, & limit) != 0) {
 		perror("setrlimit");
 		exit(EXIT_FAILURE);
 	}
@@ -49,18 +49,19 @@ int main (void)
 		perror("open");
 		exit(EXIT_FAILURE);
 	}
-	memset(bloc, 1, TAILLE_BLOC);
+	memset(block, 1, BLOCK_SIZE);
 	do {
-		nb_ecrits = write(fd, bloc, TAILLE_BLOC);
-		if (nb_ecrits != TAILLE_BLOC) {
-			fprintf(stderr, "nb_ecrits = %d\n", nb_ecrits);
+		written = write(fd, block, BLOCK_SIZE);
+		if (written != BLOCK_SIZE) {
+			fprintf(stderr, "written = %d\n", written);
 			if (errno != 0) {
 				fprintf(stderr, "errno = %d : ", errno);
 				perror("");
 			}
 		}
-	} while (nb_ecrits != -1);
+	} while (written != -1);
 	close(fd);
+
 	return EXIT_SUCCESS;
 }
 

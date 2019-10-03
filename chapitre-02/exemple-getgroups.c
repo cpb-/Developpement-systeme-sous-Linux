@@ -1,9 +1,10 @@
 // ------------------------------------------------------------------
 // exemple-getgroups.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,29 +14,30 @@
 
 int main (void)
 {
-	int  taille;
-	gid_t * table_gid = NULL;
+	int  size;
+	gid_t * gid_table = NULL;
 	int  i;
 
-	if ((taille = getgroups(0, NULL)) < 0) {
-		fprintf(stderr, "Erreur getgroups, errno = %d\n", errno);
+	if ((size = getgroups(0, NULL)) < 0) {
+		fprintf(stderr, "Error in getgroups(), errno = %d\n", errno);
 		return 1;
 	}
 
-	if ((table_gid = calloc(taille, sizeof(gid_t))) == NULL) {
-		fprintf(stderr, "Erreur  calloc, errno = %d\n", errno);
+	if ((gid_table = calloc(size, sizeof(gid_t))) == NULL) {
+		fprintf(stderr, "Error in calloc(), errno = %d\n", errno);
 		return 1;
 	}
 
-	if (getgroups(taille, table_gid) < 0) {
-		fprintf(stderr, "Erreur getgroups, errno = %d\n", errno);
+	if (getgroups(size, gid_table) < 0) {
+		fprintf(stderr, "Error in getgroups(), errno = %d\n", errno);
 		return 1;
 	}
-	for (i = 0; i < taille; i ++)
-		fprintf(stdout, "%u ", table_gid[i]);
+	for (i = 0; i < size; i ++)
+		fprintf(stdout, "%u ", gid_table[i]);
 	fprintf(stdout, "\n");
 
-	free(table_gid);
+	free(gid_table);
+
 	return 0;
 }
 

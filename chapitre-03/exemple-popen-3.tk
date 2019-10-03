@@ -1,4 +1,10 @@
 #! /usr/bin/wish
+# ------------------------------------------------------------------
+# exemple-popen-3.th
+# Fichier d'exemple du livre "Developpement Systeme sous Linux"
+# (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+# https://www.blaess.fr/christophe/
+# ------------------------------------------------------------------
 
 ## Le titre de la fenetre est le premier argument recu
 ## sur la ligne de commande.

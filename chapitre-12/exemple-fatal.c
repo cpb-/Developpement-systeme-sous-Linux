@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-fatal.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -11,7 +11,7 @@
 #include <signal.h>
 
 
-void gestionnaire_signal_fatal (int numero)
+void signal_handler(int num)
 {
 	/* Effectuer le nettoyage :			*/
 	/*   Couper proprement les connexions reseau	*/
@@ -20,17 +20,18 @@ void gestionnaire_signal_fatal (int numero)
 
 	fprintf(stdout, "\nJe fais le menage !\n");
 	fflush(stdout);
-	signal(numero, SIG_DFL);
-	raise(numero);
+	signal(num, SIG_DFL);
+	raise(num);
 }
 
 int main (void)
 {
-	struct sigaction action;
-	action.sa_handler = gestionnaire_signal_fatal;
+	struct sigaction action
+	;
+	action.sa_handler = signal_handler;
 	action.sa_flags = 0;
 	sigfillset(& action.sa_mask);
-	fprintf(stdout, "mon pid est %ld\n", (long) getpid());
+	fprintf(stdout, "My PID %ld\n", (long) getpid());
 	if ((sigaction(SIGTERM, & action, NULL) != 0)
 	 || (sigaction(SIGSEGV, & action, NULL) != 0)) {
 	 	perror("sigaction");

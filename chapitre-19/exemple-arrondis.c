@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-arrondis.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <math.h>
@@ -12,19 +12,20 @@
 int main (void)
 {
 	double d;
-	double arrondi_inf;
-	double arrondi_sup;
-	double arrondi_proche;
-	int    converti;
+	double floor_rounded;
+	double ceil_rounded;
+	double rint_rounded;
+	int    integer;
 
-	printf("reel    floor() ceil()  rint()  (int)\n");
+	printf("double  floor() ceil()  rint()  (int)\n");
 	for (d = -1.8; d < 1.9; d += 0.2) {
-		arrondi_inf = floor(d);
-		arrondi_sup = ceil(d);
-		arrondi_proche = rint(d);
-		converti = (int) d;
+		floor_rounded = floor(d);
+		ceil_rounded= ceil(d);
+		rint_rounded = rint(d);
+		integer = (int) d;
 		printf("% 4.1f    % 4.1f    % 4.1f    % 4.1f    % 2d\n",
-		        d, arrondi_inf, arrondi_sup, arrondi_proche, converti);
+		        d, floor_rounded, ceil_rounded, rint_rounded, integer);
 	}
+
 	return EXIT_SUCCESS;
 }

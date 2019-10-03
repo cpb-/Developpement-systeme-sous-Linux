@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-clock.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -10,24 +10,25 @@
 #include <time.h>
 #include <unistd.h>
 
-void    action_a_mesurer        (void);
-    
+void  function_to_profile(void);
+
 int main (void)
 {
-	clock_t debut_programme;
-	double  duree_ecoulee;
+	clock_t start;
+	double  duration;
 
-	debut_programme = clock();
+	start = clock();
 
-	action_a_mesurer();
+	function_to_profile();
 
-	duree_ecoulee = clock() - debut_programme;
-	duree_ecoulee = duree_ecoulee / CLOCKS_PER_SEC;
-	fprintf(stdout, "Duree = %f \n", duree_ecoulee);
+	duration = clock() - start;
+	duration = duration / CLOCKS_PER_SEC;
+	fprintf(stdout, "Duration = %f \n", duration);
 	return EXIT_SUCCESS;
 }
 
-void action_a_mesurer (void)
+
+void function_to_profile(void)
 {
 	int i, j;
 	FILE * fp1, * fp2;
@@ -47,5 +48,4 @@ void action_a_mesurer (void)
 		}
 	}
 }
-
 

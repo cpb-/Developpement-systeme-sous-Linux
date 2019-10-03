@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-mprotect-2.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <signal.h>
@@ -11,50 +11,52 @@
 #include <string.h>
 #include <sys/mman.h>
 
-#define TAILLE_CHAINE	128
+#define STRING_SIZE	128
 
-void * mon_malloc_avec_mmap (size_t taille)
+void * my_malloc_with_mmap(size_t size)
 {
-	void * retour;
-	retour = mmap(NULL, taille, PROT_READ | PROT_WRITE, 
+	void *ret;
+
+	ret = mmap(NULL, size, PROT_READ | PROT_WRITE, 
 	              MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
-	if (retour == MAP_FAILED)
+	if (ret == MAP_FAILED)
 		return NULL;
-	return retour;
+	return ret;
 }
 
-void gestionnaire_sigsegv (int numero)
+void sigsegv_handler(int num)
 {
-	fprintf(stderr, "Signal SIGSEGV recu\n");
+	fprintf(stderr, "Received SIGSEGV signal\n");
 }
 
 int main (void)
 {
-	char * chaine = NULL;
-	if (signal(SIGSEGV, gestionnaire_sigsegv) == SIG_ERR) {
+	char * string = NULL;
+
+	if (signal(SIGSEGV, sigsegv_handler) == SIG_ERR) {
 		perror("signal");
 		exit(EXIT_FAILURE);
 	}
-	fprintf(stdout, "Allocation de %d octets\n", TAILLE_CHAINE);
-	chaine = mon_malloc_avec_mmap(TAILLE_CHAINE);
-	if (chaine == NULL) {
+	fprintf(stdout, "Allocation de %d octets\n", STRING_SIZE);
+	string = my_malloc_with_mmap(STRING_SIZE);
+	if (string == NULL) {
 		perror("mmap");
 		exit(EXIT_FAILURE);
 	}
 	fprintf(stdout, "Protections par defaut\n");
 	fprintf(stdout, "   Ecriture ...");
-	strcpy(chaine, "Ok");
+	strcpy(string, "Ok");
 	fprintf(stdout, "Ok\n");
 
 	fprintf(stdout, "Interdiction de lecture\n");
-	if (mprotect(chaine, TAILLE_CHAINE, PROT_NONE) < 0) {
+	if (mprotect(string, STRING_SIZE, PROT_NONE) < 0) {
 		perror("mprotect");
 		exit(EXIT_FAILURE);
 	}
 
 	fprintf(stdout, "   Lecture ...\n");
 	fflush(stdout);
-	fprintf(stdout, "%s\n", chaine);
+	fprintf(stdout, "%s\n", string);
 	/* ici on doit deja etre arrete par un signal */
 	return EXIT_SUCCESS;
 }

@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-dup.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <fcntl.h>
@@ -13,6 +13,7 @@
 int main (void)
 {
 	int fd;
+
 	fd = open("essai.dup", O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0) {
 		perror("open");
@@ -26,6 +27,7 @@ int main (void)
 	close(fd);
 	execlp("ls", "ls", NULL);
 	perror("execlp");
+
 	exit(EXIT_FAILURE);
 }
 

@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-perror.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -13,15 +13,15 @@
 
 int main (void)
 {
-	struct rlimit limite;
+	struct rlimit limit;
 	pid_t	pid;
 
-	if (getrlimit(RLIMIT_NPROC, & limite) != 0) {
+	if (getrlimit(RLIMIT_NPROC, &limit) != 0) {
 		perror("getrlimit");
 		exit(EXIT_FAILURE);
 	}
-	limite.rlim_cur = 16;
-	if (setrlimit(RLIMIT_NPROC, & limite) != 0) {
+	limit.rlim_cur = 16;
+	if (setrlimit(RLIMIT_NPROC, &limit) != 0) {
 		perror("setrlimit");
 		exit(EXIT_FAILURE);
 	}

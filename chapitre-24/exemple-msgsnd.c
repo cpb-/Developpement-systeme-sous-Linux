@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-msgsnd.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -14,8 +14,9 @@
 
 typedef struct {
 	long type;
-	char texte [256];
+	char text[256];
 } message_t;
+
 
 int main (int argc, char * argv[])
 {
@@ -31,20 +32,21 @@ int main (int argc, char * argv[])
 		perror("ftok");
 		exit(EXIT_FAILURE);
 	}
-	if ((sscanf(argv[2], "%ld", & (message.type)) != 1)
+	if ((sscanf(argv[2], "%ld", &(message.type)) != 1)
 	 || (message.type <= 0)) {		
 		fprintf(stderr, "Type invalide");
 		exit(EXIT_FAILURE);
 	}
-	strncpy(message.texte, argv[3], 255);
-	message.texte[255] = '\0';
+	strncpy(message.text, argv[3], 255);
+	message.text[255] = '\0';
 	if ((file = msgget(key, IPC_CREAT | 0600)) == -1) {
 		perror("msgget");
 		exit(EXIT_FAILURE);
 	}
-	if (msgsnd(file, (void *) & message, 256, 0) <0) {
+	if (msgsnd(file, (void *) &message, 256, 0) <0) {
 		perror("msgsnd");
 		exit(EXIT_FAILURE);
 	}
+
 	return EXIT_SUCCESS;
 }

@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-nonblock-2.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <fcntl.h>
@@ -12,10 +12,10 @@
 
 int main (void)
 {
-	int  tube[2];
+	int  pipe_fd[2];
 	char c;
 
-	if (pipe(tube) !=0) {
+	if (pipe(pipe_fd) !=0) {
 		perror("pipe");
 		exit(EXIT_FAILURE);
 	}
@@ -24,22 +24,23 @@ int main (void)
 			perror("fork");
 			exit(EXIT_FAILURE);
 		case 0 : /* fils : ecriture */
-			close(tube[0]);
+			close(pipe_fd[0]);
 			while (1) {
-				write(tube[1], & c, 1);
+				write(pipe_fd[1], & c, 1);
 				usleep(700000);
 			}
 		default : /* pere : lecture */
-			close(tube[1]);
-			fcntl(tube[0], F_SETFL, O_NONBLOCK);
+			close(pipe_fd[1]);
+			fcntl(pipe_fd[0], F_SETFL, O_NONBLOCK);
 			while (1) {
-				if (read(tube[0], & c, 1) == 1) 
+				if (read(pipe_fd[0], & c, 1) == 1) 
 					printf("Ok\n");
 				else
 					printf("Non\n");
 				usleep(100000);
 			}
 	}
+
 	return EXIT_SUCCESS;
 }
 

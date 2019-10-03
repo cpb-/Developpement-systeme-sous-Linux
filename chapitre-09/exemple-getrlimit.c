@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-getrlimit.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -11,38 +11,38 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 
-    void affichage_limite (char * libelle, int numero);
+void display_limit (char *label, int type);
 
 int main (void)
 {
-	affichage_limite("temps CPU en secondes      ", RLIMIT_CPU);
-	affichage_limite("taille maxi d'un fichier   ", RLIMIT_FSIZE);
-	affichage_limite("taille maxi zone de donnees", RLIMIT_DATA);
-	affichage_limite("taille maxi de la pile     ", RLIMIT_STACK);
-	affichage_limite("taille maxi fichier core   ", RLIMIT_CORE);
-	affichage_limite("taille maxi residente      ", RLIMIT_RSS);
-	affichage_limite("nombre maxi de processus   ", RLIMIT_NPROC);
-	affichage_limite("nombre de fichiers ouverts ", RLIMIT_NOFILE);
-	affichage_limite("taille memoire verrouillee ", RLIMIT_NOFILE);
+	display_limit("CPU time in seconds ", RLIMIT_CPU);
+	display_limit("File size           ", RLIMIT_FSIZE);
+	display_limit("Data segment size   ", RLIMIT_DATA);
+	display_limit("Stack segment size  ", RLIMIT_STACK);
+	display_limit("Core file size      ", RLIMIT_CORE);
+	display_limit("Processes count     ", RLIMIT_NPROC);
+	display_limit("Open files count    ", RLIMIT_NOFILE);
+	display_limit("Locked memory size  ", RLIMIT_NOFILE);
 	return EXIT_SUCCESS;
 }
 
-void affichage_limite (char * libelle, int numero)
+void display_limit (char * label, int type)
 {
-	struct rlimit limite;
-	if (getrlimit(numero, & limite) != 0) {
-		fprintf(stdout, "Impossible d'acceder a la limite de %s\n",
-		                libelle);
+	struct rlimit limit;
+
+	if (getrlimit(type, &limit) != 0) {
+		fprintf(stdout, "Unable to read limit %s\n",
+		                label);
 		return;
 	}
-	fprintf(stdout, "Limite de %s : ", libelle);
-	if (limite.rlim_max == RLIM_INFINITY)
-		fprintf(stdout, "illimitee ");
+	fprintf(stdout, "Limit for %s : ", label);
+	if (limit.rlim_max == RLIM_INFINITY)
+		fprintf(stdout, "unlimited ");
 	else
-		fprintf(stdout, "%lld ", (long long int) (limite . rlim_max));
-	if (limite.rlim_cur == RLIM_INFINITY)
-		fprintf(stdout, "(illimitee)\n");
+		fprintf(stdout, "%lld ", (long long int) (limit . rlim_max));
+	if (limit.rlim_cur == RLIM_INFINITY)
+		fprintf(stdout, "(unlimited)\n");
 	else
-		fprintf(stdout, "(%lld)\n", (long long int) (limite . rlim_cur));
+		fprintf(stdout, "(%lld)\n", (long long int) (limit . rlim_cur));
 }
 

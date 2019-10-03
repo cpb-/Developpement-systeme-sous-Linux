@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-gethostent.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -11,11 +11,13 @@
 
 int main (void)
 {
-	struct hostent * hote;
+	struct hostent *host;
+
 	sethostent(1);
-	while ((hote = gethostent()) != NULL)
-		fprintf(stdout, "%s ", hote->h_name);
+	while ((host = gethostent()) != NULL)
+		fprintf(stdout, "%s ", host->h_name);
 	fprintf(stdout, "\n");
 	endhostent();
+
 	return EXIT_SUCCESS;
 }

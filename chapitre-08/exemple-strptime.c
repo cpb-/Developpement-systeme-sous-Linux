@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-strptime.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #define  _XOPEN_SOURCE
@@ -17,30 +17,30 @@ int main (int argc, char * argv[])
 {
 	int         i;
 	int         lg;
-	time_t      heure;
+	time_t      now;
 	struct tm   tm;
-	struct tm * exemple;
+	struct tm * example;
 	char *      buffer;
-	char *      retour;
+	char *      ret;
 
 	setlocale(LC_ALL, "");
 
-	time(& heure);
-	exemple = localtime(& heure);
-	memset(& tm, 0, sizeof(struct tm));
+	time(&now);
+	example = localtime(&now);
+	memset(&tm, 0, sizeof(struct tm));
 
 	for (i = 1; i < argc ; i ++) {
-		lg = strftime(NULL, SSIZE_MAX, argv[i], exemple);
+		lg = strftime(NULL, SSIZE_MAX, argv[i], example);
 		if (lg > 0) {
 			/* On alloue 2 octets de plus pour \n et \0 */
 			buffer = malloc(lg + 2); /* retour à vérifier...*/
-			strftime(buffer, lg + 2, argv[i], exemple);
-			fprintf(stdout, "Format %s (exemple %s) : ",
+			strftime(buffer, lg + 2, argv[i], example);
+			fprintf(stdout, "Format %s (example %s) : ",
 					argv[i], buffer);
 			while (1) {
 				fgets(buffer, lg + 2, stdin);
-				retour= strptime(buffer, argv[i], & tm);
-				if (retour == NULL)
+				ret = strptime(buffer, argv[i], &tm);
+				if (ret == NULL)
 					fprintf(stdout, "Erreur > ");
 				else
 					break;
@@ -48,7 +48,7 @@ int main (int argc, char * argv[])
 			free(buffer);
 		}
 	}
-	puts(asctime (& tm));
+	puts(asctime(&tm));
 	return EXIT_SUCCESS;
 }
 

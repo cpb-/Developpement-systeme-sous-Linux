@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-scanf-8.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #define _GNU_SOURCE	/* pour avoir getline() */
@@ -12,40 +12,39 @@
 
 int main (void)
 {
-	char *	ligne;
-	size_t 	taille;
-
-	int	position;
-	int	type_champ;
-	int	entier;
-	float	reel;
+	char   *string;
+	size_t  size;
+	int     position;
+	int     type;
+	int     integer;
+	float   real;
 
 	while (1) {
 		fprintf(stdout, "<type> <valeur> :\n");
-		ligne = NULL;
-		taille = 0;
-		if (getline(& ligne, & taille, stdin) == -1)
+		string = NULL;
+		size = 0;
+		if (getline(&string, &size, stdin) == -1)
 			break;
-		if (sscanf(ligne, "%d %n", & type_champ, & position) != 1) {
+		if (sscanf(string, "%d %n", &type, &position) != 1) {
 			fprintf(stdout, "Entrez le type (0=int, 1=float) "
 					 "suivi de la valeur\n");
-			free(ligne);
+			free(string);
 			continue;
 		}
-		if (type_champ == 0) {
-			if (sscanf(& (ligne[position]), "%d", &entier) != 1)
+		if (type == 0) {
+			if (sscanf(&(string[position]), "%d", &integer) != 1)
 				fprintf(stdout, "Valeur entiere attendue\n");
 			else
-				fprintf(stdout, "Ok : %d\n", entier);
-		} else if (type_champ == 1) {
-			if (sscanf(& (ligne[position]), "%f", & reel) != 1)
+				fprintf(stdout, "Ok : %d\n", integer);
+		} else if (type == 1) {
+			if (sscanf(&(string[position]), "%f", &real) != 1)
 				fprintf(stdout, "Valeur reelle attendue\n");
 			else
-				fprintf(stdout, "Ok : %e\n", reel);
+				fprintf(stdout, "Ok : %e\n", real);
 		} else {
 			fprintf(stdout, "Type inconnu (0 ou 1)\n");
 		}
-		free(ligne);
+		free(string);
 	}
 	return EXIT_SUCCESS;
 }

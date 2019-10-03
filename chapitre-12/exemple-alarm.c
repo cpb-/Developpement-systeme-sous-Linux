@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-alarm.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -11,35 +11,34 @@
 #include <setjmp.h>
 #include <unistd.h>
 
-sigjmp_buf	contexte_sigalrm;
+sigjmp_buf	sigalrm_context;
 
-void gestionnaire_sigalrm (int inutilise)
+void signal_handler(int inutilise)
 {
-	siglongjmp(contexte_sigalrm, 1);
+	siglongjmp(sigalrm_context, 1);
 }
 
 int main (void)
 {
-	char	ligne [80];
+	char	line[80];
 	int	i;
-
 	struct sigaction action;
 
-	action.sa_handler = gestionnaire_sigalrm;
+	action.sa_handler = signal_handler;
 	action.sa_flags = 0;
 	sigfillset(& action.sa_mask);
 	sigaction(SIGALRM, & action, NULL);
 
 	fprintf(stdout, "Entrez un nombre entier avant 5 secondes : ");
 
-	if (sigsetjmp(contexte_sigalrm, 1) == 0) {
+	if (sigsetjmp(sigalrm_context, 1) == 0) {
 		/* premier passage, installation */
 		alarm(5);
 	
 		/* Lecture et analyse de la ligne saisie */
 		while (1) {
-			if (fgets(ligne, 79, stdin) != NULL)
-				if (sscanf(ligne, "%d", & i) == 1)
+			if (fgets(line, 79, stdin) != NULL)
+				if (sscanf(line, "%d", & i) == 1)
 					break;
 			fprintf(stdout, "Un entier svp : ");
 		}

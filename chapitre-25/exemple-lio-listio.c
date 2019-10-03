@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-lio-listio.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <aio.h>
@@ -16,29 +16,32 @@
 
 #define SIGNAL_IO	(SIGRTMIN + 3)
 
-void gestionnaire (int signum, siginfo_t * info, void * vide)
+void signal_handler(int signum, siginfo_t * info, void *unused)
 {
 	struct aiocb * cb;
-	ssize_t        nb_octets;
+	ssize_t        bytes;
+
 	if (info->si_code == SI_ASYNCIO) {
 		cb = info->si_value.sival_ptr;
 		if (aio_error(cb) == EINPROGRESS)
 			return;
-		nb_octets = aio_return(cb);
-		fprintf(stdout, "Lecture 1 : %d octets lus \n", nb_octets);
+		bytes = aio_return(cb);
+		fprintf(stdout, "Lecture 1 : %ld octets lus \n", bytes);
 	}
 }
 
-void thread (sigval_t valeur)
+void thread(sigval_t valeur)
 {
 	struct aiocb * cb;
-	ssize_t       nb_octets;
+	ssize_t       bytes;
+
 	cb = valeur.sival_ptr;
 	if (aio_error(cb) == EINPROGRESS)
 		return;
-	nb_octets = aio_return(cb);
-	fprintf(stdout, "Lecture 2 : %d octets lus \n", nb_octets);
+	bytes = aio_return(cb);
+	fprintf(stdout, "Lecture 2 : %ld octets lus \n", bytes);
 }
+
 
 int main (int argc, char * argv[])
 {
@@ -46,11 +49,10 @@ int main (int argc, char * argv[])
 	struct aiocb     cb[3];
 	char             buffer[256][3];
 	struct sigaction action;
-	int              nb_octets;
-	
+	int              bytes;
 	struct sigevent  lio_sigev;
 	struct aiocb *   lio[3];
-	
+
 	if (argc != 2) {
 		fprintf(stderr, "Syntaxe : %s fichier\n", argv[0]);
 		exit(EXIT_FAILURE);
@@ -59,7 +61,7 @@ int main (int argc, char * argv[])
 		perror("open");
 		exit(EXIT_FAILURE);
 	}
-	action.sa_sigaction = gestionnaire;
+	action.sa_sigaction = signal_handler;
 	action.sa_flags     = SA_SIGINFO;
 	sigemptyset(& action . sa_mask);
 	if (sigaction(SIGNAL_IO, & action, NULL) < 0) {
@@ -113,8 +115,8 @@ int main (int argc, char * argv[])
 	    || (aio_error(& cb[1]) == EINPROGRESS)		
 	    || (aio_error(& cb[2]) == EINPROGRESS))
 		sleep (1);
-	nb_octets = aio_return(& cb[0]);
-	fprintf(stdout, "Lecture O : %d octets lus \n", nb_octets);
+	bytes = aio_return(& cb[0]);
+	fprintf(stdout, "Lecture O : %d octets lus \n", bytes);
 	
 	return EXIT_SUCCESS;
 }

@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-assert.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <assert.h>
@@ -10,28 +10,28 @@
 #include <stdlib.h>
 
 
-void fonction_reussissant (int i);
-void fonction_echouant    (int i);
+void succeeding_function(int i);
+void failing_function(int i);
 
-int main (void)
+int main(void)
 {
-	fonction_reussissant(5);
-	fonction_echouant(5);
+	succeeding_function(5);
+	failing_function(5);
 
 	return EXIT_SUCCESS;
 }
 
-void fonction_reussissant (int i)
+void succeeding_function(int num)
 {
 	/* Cette fonction necessite que i soit positif */
-	assert(i >= 0);
-	fprintf(stdout, "Ok, i est positif\n");
+	assert(num >= 0);
+	fprintf(stdout, "Ok, num est positif\n");
 }
 
-void fonction_echouant (int i)
+void failing_function(int num)
 {
-	/* Cette fonction necessite que i soit négatif */
-	assert(i <= 0);
-	fprintf(stdout, "Ok, i est negatif\n");
+	/* Cette fonction necessite que i soit negatif */
+	assert(num <= 0);
+	fprintf(stdout, "Ok, num est negatif\n");
 }
 

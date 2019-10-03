@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-flush.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -12,16 +12,17 @@
 
 int main (void)
 {
-	struct termios terminal;
+	struct termios config;
 	int i;
 
 	fprintf(stdout, "FLUSH dans 5 secondes\n");
 	sleep(5);
 	fprintf(stdout, "FLUSH !\n");
-	if (tcgetattr(STDIN_FILENO, & terminal) == 0)
-		tcsetattr(STDIN_FILENO, TCSAFLUSH, & terminal);
+	if (tcgetattr(STDIN_FILENO, &config) == 0)
+		tcsetattr(STDIN_FILENO, TCSAFLUSH, &config);
 	while ((i = fgetc(stdin)) != EOF)
 		fprintf(stdout, "%02X ", i);
+
 	return EXIT_SUCCESS;
 }
 

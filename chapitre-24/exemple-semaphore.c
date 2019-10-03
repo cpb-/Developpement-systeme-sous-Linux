@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-semaphore.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <errno.h>
@@ -15,7 +15,7 @@
 int main(int argc, char * argv[])
 {
 	int   i;
-	sem_t * sem;
+	sem_t *sem;
 
 	if (argc != 2) {
 		fprintf(stderr, "usage: %s nom_semaphore\n", argv[0]);
@@ -42,6 +42,7 @@ int main(int argc, char * argv[])
 		fprintf(stderr, "     [%d] lache le semaphore\n", getpid());
 		sem_post(sem);
 		sleep(2);
-	}	
+	}
+
 	return EXIT_SUCCESS;
 }

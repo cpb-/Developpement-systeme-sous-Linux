@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-pthread-create-4.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <pthread.h>
@@ -10,35 +10,36 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void * fonction_thread(void * arg);
+void *thread_function(void *arg);
 
 #define NB_THREADS 5
 
-int compteur = 0;
+int counter = 0;
 
 int main (void)
 {
 	pthread_t thr[NB_THREADS];
 	long n;
+
 	for (n = 0; n < NB_THREADS; n++) {
-		if (pthread_create(&thr[n], NULL, fonction_thread, (void *) n) != 0) {
-			fprintf(stderr, "Erreur dans pthread_create\n");
+		if (pthread_create(&thr[n], NULL, thread_function, (void *) n) != 0) {
+			fprintf(stderr, "Error during pthread_create()\n");
 			exit(EXIT_FAILURE);
 		}
 	}
 	while (1) {
-		fprintf(stderr, "Thread Main, compteur = %d\n", compteur);
+		fprintf(stderr, "Main thread, counter = %d\n", counter);
 		sleep(1);
 	}
 }
 
-void * fonction_thread(void * arg)
+void *thread_function(void *arg)
 {
 	long num = (long) arg;
+
 	while (1) {
-		fprintf(stderr, "Thread numero %ld, compteur = %d \n", num+1, compteur);
-		compteur ++;
+		fprintf(stderr, "Thread # %ld, counter = %d \n", num+1, counter);
+		counter ++;
 		sleep(1);
 	}
 }
-

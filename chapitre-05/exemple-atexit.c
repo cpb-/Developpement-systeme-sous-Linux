@@ -1,44 +1,47 @@
 // ------------------------------------------------------------------
 // exemple-atexit.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
 #include <stdlib.h>
 
-void	sortie_1	(void);
-void	sortie_2	(void);
-void	sortie_3	(void);
+void out_1(void);
+void out_2(void);
+void out_3(void);
 
-int main (void)
+int main(void)
 {
-	if (atexit(sortie_3) != 0)
-		fprintf(stderr, "Impossible d'enregistrer sortie_3()\n");
-	if (atexit(sortie_2) != 0)
-		fprintf(stderr, "Impossible d'enregistrer sortie_2()\n");
-	if (atexit(sortie_2) != 0)
-		fprintf(stderr, "Impossible d'enregistrer sortie_2()\n");
-	if (atexit(sortie_1) != 0)
-		fprintf(stderr, "Impossible d'enregistrer sortie_1()\n");
-	fprintf(stdout, "Allez... on quitte en revenant de main()\n");
+	if (atexit(out_3) != 0)
+		fprintf(stderr, "Unable to record out_1()\n");
+	if (atexit(out_2) != 0)
+		fprintf(stderr, "Unable to record out_2()\n");
+	if (atexit(out_2) != 0)
+		fprintf(stderr, "Unable to record out_2()\n");
+	if (atexit(out_1) != 0)
+		fprintf(stderr, "Unable to record out_1()\n");
+
+	fprintf(stdout, "Ok, returning from main()\n");
+
 	return EXIT_SUCCESS;
 }
 
-void sortie_1 (void)
+
+void out_1(void)
 {
-	fprintf(stdout, "Sortie_1 : apelle exit()\n");
+	fprintf(stdout, "out_1(): calling exit()\n");
 	exit(EXIT_SUCCESS);
 }
 
-void sortie_2 (void)
+void out_2(void)
 {
-	fprintf(stdout, "Sortie_2\n");
+	fprintf(stdout, "out_2()\n");
 }
 
-void sortie_3 (void)
+void out_3(void)
 {
-	fprintf(stdout, "Sortie_3\n");
+	fprintf(stdout, "out_3()\n");
 }
 

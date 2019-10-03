@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-siginfo.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <signal.h>
@@ -10,9 +10,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void gestionnaire (int numero, siginfo_t * info, void * inutilise)
+void signal_handler(int num, siginfo_t *info, void *unused)
 {
-	fprintf(stderr, "Recu %d\n", numero);
+	fprintf(stderr, "received %d\n", num);
 	if (info == NULL)
 		return;
 	fprintf(stderr, "  si_code   = %d\n", info->si_code);
@@ -24,13 +24,13 @@ int main (void)
 	int   i;
 	struct sigaction action;
 
-	action.sa_sigaction = gestionnaire;
+	action.sa_sigaction = signal_handler;
 	action.sa_flags = SA_SIGINFO;
 	sigfillset(& action.sa_mask);
 	fprintf(stderr, "PID=%ld\n", (long) getpid());
 	for (i = 1; i < NSIG; i ++)
 		if (sigaction(i, & action, NULL) < 0)
-			fprintf(stderr, "%d non intercepte\n", i);
+			fprintf(stderr, "%d not handled\n", i);
 	while (1)
 		pause();
 	return EXIT_SUCCESS;

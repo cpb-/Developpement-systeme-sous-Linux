@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-gettext.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <libintl.h>
@@ -20,6 +20,7 @@ int main (void)
 	fprintf(stdout, gettext("and here is the second string in the first set.\n"));
 	fprintf(stdout, gettext("Now let's have a look at the 1st string in 2nd set,\n"));
 	fprintf(stdout, gettext("and finaly the second string in the second set.\n"));
+
 	return EXIT_SUCCESS;
 }
 

@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-getsid.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #define _GNU_SOURCE
@@ -22,15 +22,16 @@ int main (int argc, char * argv[])
 	}
 	for (i = 1; i < argc; i ++) {
 		if (sscanf(argv[i], "%ld", & pid) != 1) {
-			fprintf(stderr, "PID invalide : %s\n", argv[i]);
+			fprintf(stderr, "invalid PID: %s\n", argv[i]);
 		} else {
 			sid = (long) getsid((pid_t)pid);
 			if (sid == -1)
-				fprintf(stderr, "%ld inexistant\n", pid);
+				fprintf(stderr, "%ld: doesn't exist\n", pid);
 			else
-				fprintf(stderr, "%ld : %ld\n", pid, sid);
+				fprintf(stderr, "%ld: %ld\n", pid, sid);
 		}
 	}
 	return 0;
 }
 
+ 

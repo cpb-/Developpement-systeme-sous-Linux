@@ -9,7 +9,6 @@ EXECUTABLES=	exemple-assert		\
 		exemple-on-exit		\
 		exemple-perror		\
 		exemple-strerror	\
-		exemple-sys-errlist	\
 		exemple-wait-1		\
 		exemple-wait-2		\
 		exemple-waitid		\

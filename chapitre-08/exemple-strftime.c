@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-strftime.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <limits.h>
@@ -17,12 +17,12 @@ int main (int argc, char * argv[])
 	int         lg;
 	char *      buffer;
 	struct tm * tm;
-	time_t      heure;
+	time_t      now;
 
 	setlocale(LC_ALL, "");
 
-	time(& heure);
-	tm = localtime(& heure);
+	time(&now);
+	tm = localtime(&now);
 
 	for (i = 1; i < argc; i ++) {
 		fprintf(stdout, "%s : ", argv[i]);

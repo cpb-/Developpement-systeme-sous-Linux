@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-getchar.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -11,33 +11,34 @@
 
 int main (void)
 {
-	int  lu;
-	char caracteres[17];
-	int  emplacement = 0;
-	int  rang = 0;
+	int  value;
+	char line[17];
+	int  index = 0;
+	int  column = 0;
 
-	caracteres[16] = '\0';
-	while ((lu = getchar()) != EOF) {
-		if ((rang = emplacement % 16) == 0)
-			fprintf(stdout, "%08X  ", emplacement % 0xFFFFFFFF);
-		fprintf(stdout, "%02X", lu);
-		if (rang == 7)
+	line[16] = '\0';
+	while ((value = getchar()) != EOF) {
+		if ((column = index % 16) == 0)
+			fprintf(stdout, "%08X  ", index % 0xFFFFFFFF);
+		fprintf(stdout, "%02X", value);
+		if (column == 7)
 			fprintf(stdout, "-");
 		else
 			fprintf(stdout, " ");
-		if (isprint(lu))
-			caracteres[rang] = lu;
+		if (isprint(value))
+			line[column] = value;
 		else
-			caracteres[rang] = ' ';
-		if (rang == 15)
-			fprintf(stdout, " %s\n", caracteres);
-		emplacement ++;
+			line[column] = ' ';
+		if (column == 15)
+			fprintf(stdout, " %s\n", line);
+		index ++;
 	}
-	while (rang < 15) {
+	while (column < 15) {
 		fprintf(stdout, "   ");
-		caracteres[rang] = '\0';
-		rang ++;
+		line[column] = '\0';
+		column ++;
 	}
-	fprintf(stdout, " %s\n", caracteres);
+	fprintf(stdout, " %s\n", line);
+
 	return EXIT_SUCCESS;
 }

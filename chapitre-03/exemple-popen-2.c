@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-popen-2.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -11,25 +11,26 @@
 #include <unistd.h>
 #include <errno.h>
 
+#define INTERFACE "eth0"
+
 int main (void)
 {
-	FILE * sortie;
-	char ligne [128];
-	char etat  [128];
+	FILE * fp;
+	char line[128];
 
-	if ((sortie = popen("/sbin/ifconfig eth0", "r")) == NULL) {
-		fprintf(stderr, " Erreur popen %d \n", errno);
+	if ((fp = popen("ip link show " INTERFACE, "r")) == NULL) {
+		fprintf(stderr, " Error in popen(): %d \n", errno);
 		exit(1);
 	}
-	while (fgets(ligne, 127, sortie) != NULL) {
-		if (sscanf(ligne, "%s", etat) == 1)
-			if (strcmp(etat, "UP") == 0) {
-				fprintf(stderr, "interface eth0 en marche \n");
-				pclose(sortie);
-				return 0;
-			}
+	while (fgets(line, 127, fp) != NULL) {
+		if (strstr(line, "state UP") != NULL) {
+			fprintf(stdout, "interface " INTERFACE " en marche \n");
+			pclose(fp);
+			return 0;
+		}
 	}
-	fprintf(stdout, "interface eth0 inactive \n");
-	pclose(sortie);
+	fprintf(stdout, "interface " INTERFACE " inactive \n");
+	pclose(fp);
+
 	return 0;
 }

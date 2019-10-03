@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-lseek.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <fcntl.h>
@@ -16,7 +16,7 @@
 int main (void)
 {
 	int	fd;
-	pid_t	pid_fils;
+	pid_t	child_pid;
 	off_t	position;
 
 	fd = open("essai.lseek", O_RDWR | O_CREAT | O_TRUNC, 0644);
@@ -30,31 +30,32 @@ int main (void)
 		exit(EXIT_FAILURE);
 	}	
 	// Puis on separe les processus
-	if ((pid_fils = fork()) < 0) {
+	if ((child_pid = fork()) < 0) {
 		perror("fork");
 		exit(EXIT_FAILURE);
 	}
-	if (pid_fils != 0) {
-		// Processus pere
+	if (child_pid != 0) {
+		// Processus parent
 		position = lseek(fd, 0, SEEK_CUR);
-		fprintf(stderr, "Pere : position = %ld\n", position);
+		fprintf(stderr, "Parent : position = %ld\n", position);
 		sleep(1);
 		position = lseek(fd, 0, SEEK_CUR);
-		fprintf(stderr, "Pere : position = %ld\n", position);
+		fprintf(stderr, "Parent : position = %ld\n", position);
 		lseek(fd, 5, SEEK_SET);
-		fprintf(stderr, "Pere : deplacement en position 5\n");
-		waitpid(pid_fils, NULL, 0);
+		fprintf(stderr, "Parent : deplacement en position 5\n");
+		waitpid(child_pid, NULL, 0);
 	} else {
-		// Processus fils
+		// Processus enfant
 		position = lseek(fd, 0, SEEK_CUR);
-		fprintf(stderr, "Fils : position = %ld\n", position);
+		fprintf(stderr, "Enfant : position = %ld\n", position);
 		lseek(fd, 2, SEEK_SET);
-		fprintf(stderr, "Fils : deplacement en position 2\n");
+		fprintf(stderr, "Enfant : deplacement en position 2\n");
 		sleep(2);
 		position = lseek(fd, 0, SEEK_CUR);
-		fprintf(stderr, "Fils : position = %ld\n", position);
+		fprintf(stderr, "Enfant : position = %ld\n", position);
 	}	
 	close(fd);
+
 	return EXIT_SUCCESS;
 }
 

@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-getutent.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -10,46 +10,48 @@
 #include <time.h>
 #include <utmp.h>
 
-void affiche_utmp (struct utmp * utmp)
+void display_utmp(struct utmp * utmp)
 {
+	time_t     t;
 	struct tm * tm;
-	char        heure[80];
+	char        hour[80];
 
-	tm = localtime(& (utmp->ut_tv.tv_sec));
-	strftime(heure, 80, "%x %X", tm);
+	t = utmp->ut_tv.tv_sec;
+	tm = localtime(&t);
+	strftime(hour, 80, "%x %X", tm);
 	switch (utmp->ut_type) {
 		case EMPTY :
 			break;
 		case RUN_LVL :
-			printf("%s : ", heure);
+			printf("%s : ", hour);
 			printf("Run-level \n");
 			break;
 		case BOOT_TIME :
-			printf("%s : ", heure);
+			printf("%s : ", hour);
 			printf("Boot \n");
 			break;
 		case OLD_TIME :
-			printf("%s : ", heure);
+			printf("%s : ", hour);
 			printf("Old Time\n");
 			break;
 		case NEW_TIME :
-			printf("%s : ", heure);
+			printf("%s : ", hour);
 			printf("New Time\n");
 			break;
 		case INIT_PROCESS :
-			printf("%s : ", heure);
+			printf("%s : ", hour);
 			printf("Init process, ");
 			printf("PID = %u, ", utmp->ut_pid);
 			printf("inittab = %s\n", utmp->ut_id);
 			break;
 		case LOGIN_PROCESS :
-			printf("%s : ", heure);
+			printf("%s : ", hour);
 			printf("Login process, ");
 			printf("PID = %u, ", utmp->ut_pid);
 			printf("TTY = %s\n", utmp->ut_line);
 			break;
 		case USER_PROCESS :
-			printf("%s : ", heure);
+			printf("%s : ", hour);
 			printf("User process, ");
 			printf("PID = %u, ", utmp->ut_pid);
 			printf("TTY = %s, ", utmp->ut_line);
@@ -63,10 +65,14 @@ void affiche_utmp (struct utmp * utmp)
 	}
 }
 
+
 int main (void)
 {
 	struct utmp * utmp;
+
 	while ((utmp = getutent()) != NULL)
-		affiche_utmp(utmp);
+		display_utmp(utmp);
+
 	return EXIT_SUCCESS;
 }
+

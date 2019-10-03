@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-popen-1.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -13,25 +13,26 @@
 
 int main (void)
 {
-	FILE * message;
-	char * commande;
+	FILE * fp;
+	char * cmd;
 
-	if ((commande = malloc(strlen(getlogin()) + 6)) == NULL) {
-		fprintf(stderr, "Erreur malloc %d\n", errno);
+	if ((cmd = malloc(strlen(getlogin()) + 6)) == NULL) {
+		fprintf(stderr, "Error in malloc(): %d\n", errno);
 		exit(1);
 	}
 
-	strcpy(commande, "mail ");
-	strcat(commande, getlogin());
+	strcpy(cmd, "mail ");
+	strcat(cmd, getlogin());
 
-	if ((message = popen(commande, "w")) == NULL) {
-		fprintf(stderr, " Erreur popen %d \n", errno);
+	if ((fp = popen(cmd, "w")) == NULL) {
+		fprintf(stderr, " Error in popen(): %d \n", errno);
 		exit(1);
 	}
 
-	fprintf(message, "Ceci est un message \n");
-	fprintf(message, "emis par moi-meme\n");
-	pclose(message);
+	fprintf(fp, "Ceci est un message \n");
+	fprintf(fp, "emis par moi-meme\n");
+	pclose(fp);
+
 	return 0;
 }
 

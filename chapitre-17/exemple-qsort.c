@@ -1,38 +1,39 @@
 // ------------------------------------------------------------------
 // exemple-qsort.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
 #include <stdlib.h>
 
-int compare_entiers (const void * elem_1, const void * elem_2)
+int integer_compare(const void *int_1, const void *int_2)
 {
-	return * ((int *)elem_1) - * ((int *)elem_2);
+	return *((int *)int_1) - *((int *)int_2);
 }
 
 
-#define NB_ENTIERS 100
+#define NB_INTEGERS 100
 
 int main (void)
 {
-	int	table_entiers[NB_ENTIERS];
+	int	table[NB_INTEGERS];
 	int	i;
 
-	for (i = 0; i < NB_ENTIERS; i ++) {
+	for (i = 0; i < NB_INTEGERS; i ++) {
 		/* On limite un peu la taille des entiers pour l'affichage */
-		table_entiers[i] = rand() & 0xFFFF;
-		fprintf(stdout, "%05d ", table_entiers[i]);
+		table[i] = rand() & 0xFFFF;
+		fprintf(stdout, "%05d ", table[i]);
 	}
 	fprintf(stdout, "\n\n");
 
-	qsort(table_entiers, NB_ENTIERS, sizeof(int), compare_entiers);
+	qsort(table, NB_INTEGERS, sizeof(int), integer_compare);
 
-	for (i = 0; i < NB_ENTIERS; i ++)
-		fprintf(stdout, "%05d ", table_entiers[i]);
+	for (i = 0; i < NB_INTEGERS; i ++)
+		fprintf(stdout, "%05d ", table[i]);
 	fprintf(stdout, "\n");
+
 	return EXIT_SUCCESS;
 }
 

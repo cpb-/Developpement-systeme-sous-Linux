@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-gethostname.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <errno.h>
@@ -13,19 +13,20 @@
 int main (void)
 {
 	char * buffer = NULL;
-	size_t taille = 8;
+	size_t size = 8;
 
-	buffer = malloc(taille);
-	while (gethostname(buffer, taille) != 0) {
+	buffer = malloc(size);
+	while (gethostname(buffer, size) != 0) {
 		if (errno != ENAMETOOLONG) {
 			perror("gethostname");
 			return EXIT_FAILURE;
 		}
-		taille += 8;
-		buffer = realloc(buffer, taille);
+		size += 8;
+		buffer = realloc(buffer, size);
 	}
 	fprintf(stdout, "%s\n", buffer);
 	free(buffer);
+
 	return EXIT_SUCCESS;
 }
 

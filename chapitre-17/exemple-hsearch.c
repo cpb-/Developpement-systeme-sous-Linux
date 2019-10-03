@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-hsearch.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <search.h>
@@ -10,26 +10,27 @@
 #include <stdlib.h>
 #include <string.h>
 
-void ajoute_entree (char * francais, char * anglais)
+void add_entry(char *french, char *english)
 {
-	ENTRY	entree;
+	ENTRY entry;
 
-	entree.key  = strdup(francais);
-	entree.data = strdup(anglais);
-	if (hsearch(entree, ENTER) == NULL) {
+	entry.key  = strdup(french);
+	entry.data = strdup(english);
+	if (hsearch(entry, ENTER) == NULL) {
 		perror("hsearch");
 		exit(EXIT_FAILURE);
 	}
 }
 
-int main (int argc, char * argv[])
+
+int main(int argc, char * argv[])
 {
-	int		i;
-	ENTRY	entree;
-	ENTRY *	trouve;
+	int    i;
+	ENTRY  entry;
+	ENTRY *found;
 
 	if (argc < 2) {
-		fprintf(stderr, "Syntaxe : %s [mois | jour]\n", argv[0]);
+		fprintf(stderr, "Usage: %s [mois | jour]\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
 	/* 12 mois + 7 jours */
@@ -37,34 +38,34 @@ int main (int argc, char * argv[])
 		perror("hcreate");
 		exit(EXIT_FAILURE);
 	}
-	ajoute_entree("janvier",   "january");
-	ajoute_entree("fevrier",   "february");
-	ajoute_entree("mars",      "march");
-	ajoute_entree("avril",     "april");
-	ajoute_entree("mai",       "may");
-	ajoute_entree("juin",      "june");
-	ajoute_entree("juillet",   "july");
-	ajoute_entree("aout",      "august");
-	ajoute_entree("septembre", "september");
-	ajoute_entree("octobre",   "october");
-	ajoute_entree("novembre",  "november");
-	ajoute_entree("decembre",  "december");
-	ajoute_entree("lundi",     "monday");
-	ajoute_entree("mardi",     "tuesday");
-	ajoute_entree("mercredi",  "wednesday");
-	ajoute_entree("jeudi",     "thursday");
-	ajoute_entree("vendredi",  "friday");
-	ajoute_entree("samedi",    "satursday");
-	ajoute_entree("dimanche",  "sunday");
+	add_entry("janvier",   "january");
+	add_entry("fevrier",   "february");
+	add_entry("mars",      "march");
+	add_entry("avril",     "april");
+	add_entry("mai",       "may");
+	add_entry("juin",      "june");
+	add_entry("juillet",   "july");
+	add_entry("aout",      "august");
+	add_entry("septembre", "september");
+	add_entry("octobre",   "october");
+	add_entry("novembre",  "november");
+	add_entry("decembre",  "december");
+	add_entry("lundi",     "monday");
+	add_entry("mardi",     "tuesday");
+	add_entry("mercredi",  "wednesday");
+	add_entry("jeudi",     "thursday");
+	add_entry("vendredi",  "friday");
+	add_entry("samedi",    "satursday");
+	add_entry("dimanche",  "sunday");
 
 	for (i = 1; i < argc; i ++) {
-		entree.key = argv[i];
+		entry.key = argv[i];
 		fprintf(stdout, "%s -> ", argv[i]);
-		trouve = hsearch(entree, FIND);
-		if (trouve == NULL)
+		found = hsearch(entry, FIND);
+		if (found == NULL)
 			fprintf(stdout, "pas dans la liste \n");
 		else
-			fprintf(stdout, "%s\n", (char *)trouve->data);
+			fprintf(stdout, "%s\n", (char *)found->data);
 	}
 	hdestroy();
 

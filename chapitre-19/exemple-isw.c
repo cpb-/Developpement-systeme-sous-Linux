@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-isw.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <locale.h>
@@ -12,9 +12,10 @@
 #include <wchar.h>
 #include <wctype.h>
 
-void affiche_caracteristiques (wint_t c)
+void display_character (wint_t c)
 {
 	fprintf(stdout, "%lc : ", c);
+
 	if (iswalnum(c))  fprintf(stdout, "alphanumerique ");
 	if (iswalpha(c))  fprintf(stdout, "alphabetique ");
 	if (iswcntrl(c))  fprintf(stdout, "controle ");
@@ -26,15 +27,18 @@ void affiche_caracteristiques (wint_t c)
 	if (iswspace(c))  fprintf(stdout, "espace ");
 	if (iswupper(c))  fprintf(stdout, "majuscule ");
 	if (iswxdigit(c)) fprintf(stdout, "hexadecimal ");
+
 	fprintf(stdout, "\n");
 }
 
 int main (void)
 {
-	wint_t caractere;
+	wint_t character;
+
 	setlocale(LC_ALL, "");
-	while ((caractere = getwchar()) != WEOF)
-		affiche_caracteristiques(caractere);
+	while ((character = getwchar()) != WEOF)
+		display_character(character);
+
 	return EXIT_SUCCESS;
 }
 

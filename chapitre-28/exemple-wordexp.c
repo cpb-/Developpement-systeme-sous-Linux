@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-wordexp.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -12,11 +12,11 @@
 #include <wordexp.h>
 #include <sys/wait.h>
 
-#define LG_LIGNE	256
+#define LINE_LENGTH  256
 
-void affiche_erreur (int numero)
+void display_error(int err_num)
 {
-	switch (numero) {
+	switch (err_num) {
 		case WRDE_BADCHAR :
 			fprintf(stderr, "Caractere interdit\n");
 			break;
@@ -37,33 +37,34 @@ void affiche_erreur (int numero)
 	}
 }
 
+
 int main (void)
 {
-	char ligne[LG_LIGNE];
-	wordexp_t       mots;
-	int           erreur;
-	pid_t            pid;
+	char      line[LINE_LENGTH];
+	wordexp_t words;
+	int       error;
+	pid_t     pid;
 
 	while (1) {
 		fprintf(stdout, "-> ");
-		if (fgets(ligne, LG_LIGNE, stdin) == NULL)
+		if (fgets(line, LINE_LENGTH, stdin) == NULL)
 			break;
-		if (strlen(ligne) == 0)
+		if (strlen(line) == 0)
 			continue;
-		if (ligne[strlen(ligne) - 1] == '\n')
-			ligne[strlen(ligne) - 1] = '\0';
-		if ((erreur = wordexp(ligne, & mots, WRDE_SHOWERR)) != 0) {
-			affiche_erreur(erreur);
+		if (line[strlen(line) - 1] == '\n')
+			line[strlen(line) - 1] = '\0';
+		if ((error = wordexp(line, &words, WRDE_SHOWERR)) != 0) {
+			display_error(error);
 			goto fin_boucle;
 		}
-		if (mots.we_wordc == 0)
+		if (words.we_wordc == 0)
 			goto fin_boucle;
-		if (strcmp(mots.we_wordv[0], "set") == 0) {
-			if (mots.we_wordc != 3) {
+		if (strcmp(words.we_wordv[0], "set") == 0) {
+			if (words.we_wordc != 3) {
 				fprintf(stderr, "syntaxe : set variable valeur\n");
 				goto fin_boucle;
 			}
-			if (setenv(mots.we_wordv[1], mots.we_wordv[2], 1) < 0)
+			if (setenv(words.we_wordv[1],words.we_wordv[2], 1) < 0)
 				perror("");
 			goto fin_boucle;
 		}
@@ -72,16 +73,17 @@ int main (void)
 			goto fin_boucle;
 		}
 		if (pid == 0) {
-			execvp(mots.we_wordv[0], mots.we_wordv);
-			perror(mots.we_wordv [0]);
+			execvp(words.we_wordv[0],words.we_wordv);
+			perror(words.we_wordv [0]);
 			exit(EXIT_FAILURE);
 		} else {
 			wait(NULL);
 		}
 		fin_boucle :
-			wordfree(& mots);
+			wordfree(&words);
 	}
 	fprintf(stdout, "\n");
+
 	return EXIT_SUCCESS;
 }
 

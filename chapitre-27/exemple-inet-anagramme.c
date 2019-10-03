@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-inet-anagramme.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #define _GNU_SOURCE
@@ -14,17 +14,19 @@
 
 int main (void)	
 {
-	char chaine[256];
+	char string[256];
 	int  n;
+
 	while (1) {
-		if ((n = read(STDIN_FILENO, chaine, 256)) <= 1)
+		if ((n = read(STDIN_FILENO, string, 256)) <= 1)
 			break;
-		while (isspace(chaine[n - 1]))
+		while (isspace(string[n - 1]))
 			n --;
-		chaine[n] = '\0';
-		strfry(chaine);
-		write(STDOUT_FILENO, chaine, n);
+		string[n] = '\0';
+		strfry(string);
+		write(STDOUT_FILENO, string, n);
 	}
+
 	return EXIT_SUCCESS;
 }
 

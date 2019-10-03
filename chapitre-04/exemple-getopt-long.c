@@ -1,66 +1,66 @@
 // ------------------------------------------------------------------
 // exemple-getpopt-long.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <getopt.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <getopt.h>
 
-	int	vitesse_lecture = 0; /* -1 = lent, 0 = normal, 1 = rapide */
+int	speed = 0; /* -1 = lent, 0 = normal, 1 = rapide */
 
-int main (int argc, char * argv [])
+int main (int argc, char *argv[])
 {
-	char * optstring = "d:f:";
-	
+	char *optstring = "b:e:";
+
 	struct option longopts[] = {
 
-		/* name  has_arg  flag                 val   */
-	
-		{ "debut",  1,    NULL,               'd' },
-		{ "fin",    1,    NULL,               'f' },	
-		{ "rapide", 0,    & vitesse_lecture,   1  },
-		{ "lent",   0,    & vitesse_lecture,  -1  },
+		/* name  has_arg  flag     val  */
+
+		{ "begin",  1,    NULL,    'b' },
+		{ "end",    1,    NULL,    'e' },
+		{ "slow",   0,    &speed,   1  },
+		{ "fast",   0,    &speed,  -1  },
 
 		/* Le dernier element doit etre nul */
-		{ NULL,     0,    NULL,                0  },
+		{ NULL,     0,    NULL,     0  },
 	};
 
 	int	longindex;
 
 	int	option;
 
-	int	debut = 0;
-	int 	fin = 999;
+	int	begin_position = 0;
+	int end_position = 999;
 
-	while ((option = getopt_long(argc, argv, 
-			optstring, longopts, & longindex)) != -1) {
+	while ((option = getopt_long(argc, argv,
+			optstring, longopts, &longindex)) != -1) {
 
 		switch (option) {
 
-			case 'd' :
-				if (sscanf(optarg, "%d", & debut) != 1) {
-					fprintf(stderr, "Erreur pour debut\n");
+			case 'b' :
+				if (sscanf(optarg, "%d", &begin_position) != 1) {
+					fprintf(stderr, "Begin position error\n");
 				};
 				break;
-			
-			case 'f' :
-				if (sscanf(optarg, "%d", & fin) != 1) {
-					fprintf(stderr, "Erreur pour fin\n");
+
+			case 'e' :
+				if (sscanf(optarg, "%d", &end_position) != 1) {
+					fprintf(stderr, "End position error\n");
 				};
 				break;
 
 			case 0 :
-				/* vitesse_lecture traitee automatiquement */
 				break;
+
 			case '?' :
 				/*  On a laisse opterr à 1 */
 				break;
 		}
 	}
-	fprintf(stdout, "Vitesse %d, debut %d, fin %d\n",
-			vitesse_lecture, debut, fin);
+	fprintf(stdout, "Speed %d, begin at %d, end at %d\n",
+			speed, begin_position, end_position);
 	return 0;
 }

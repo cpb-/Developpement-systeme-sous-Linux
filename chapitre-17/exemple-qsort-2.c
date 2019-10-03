@@ -1,75 +1,75 @@
 // ------------------------------------------------------------------
 // exemple-qsort-2.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-void * b_insert (const void * cle, const void * table, 
-	  size_t * nb_elements, size_t taille_element, 
-	int (* compare) (const void * lm1, const void * lm2))
+void * b_insert(const void *key, const void * table, 
+                size_t *nb_items, size_t item_size, 
+                int (* compare)(const void *, const void *))
 {
-	const char * element;
-	int          comparaison;
+	const char *item;
+	int comparison;
 
-	size_t bas  = 0;
-	size_t haut = (* nb_elements);
-	size_t milieu;
+	size_t bottom  = 0;
+	size_t top = (* nb_items);
+	size_t middle;
 
-	while (bas < haut) {
+	while (bottom < top) {
 
-		milieu = bas + (haut - bas) / 2;
-		element = (void *) (((const char *) table)
-		        + (milieu * taille_element));
-		comparaison = compare(cle, element);
-		if (comparaison < 0)
-			haut = milieu;
-		else if (comparaison > 0)
-			bas = milieu + 1;
+		middle = bottom + (top - bottom) / 2;
+		item = (void *) (((const char *) table)
+		        + (middle * item_size));
+		comparison = compare(key, item);
+		if (comparison < 0)
+			top = middle;
+		else if (comparison > 0)
+			bottom = middle + 1;
 		else
-			return ((void *) element);
+			return ((void *) item);
 	}
-	// Ici, haut = bas, on n'a pas trouve l'element, on va l'ajouter,
-  	//  mais nous devons verifier de quel cote de l'element "haut".
-	if (haut >= (* nb_elements)) {
-		element = (void *) (((const char *) table)
-	        	+ ((* nb_elements) * taille_element));
+	// Ici, top = bottom, on n'a pas trouve l'element, on va l'ajouter,
+	//  mais nous devons verifier de quel cote de l'element "top".
+	if (top >= (*nb_items)) {
+		item = (void *) (((const char *)table)
+		      + ((* nb_items) * item_size));
 	} else {
 		
-		element = (void *) (((const char *) table)
-		        + (haut * taille_element));
-		if (compare(cle, element) > 0) {
-			element += taille_element;
-			haut ++;
+		item = (void *) (((const char *) table)
+		        + (top * item_size));
+		if (compare(key, item) > 0) {
+			item += item_size;
+			top ++;
 		}
-		memmove((char *) element + taille_element, (char *) element, (* nb_elements) - haut);
+		memmove((char *)item + item_size, (char *)item, (*nb_items) - top);
 	}
-	memcpy((void *) element, cle, taille_element);
-	(* nb_elements) ++;
-	return (void *) element;
+	memcpy((void *)item, key, item_size);
+	(*nb_items) ++;
+	return (void *)item;
 }
 
-int compare_char (const void * lm1, const void * lm2)
+int compare_char (const void *itm1, const void *itm2)
 {
-	return  ((char *)lm1)[0] - ((char *)lm2)[0];
+	return  ((char *)itm1)[0] - ((char *)itm2)[0];
 }
 
 int main (int argc, char * argv[])
 {
 	char *	table = NULL;
-	size_t	longueur;
+	size_t	size;
 
 	if (argc != 3) {
-		fprintf(stderr, "syntaxe: %s table element\n", argv[0]);
+		fprintf(stderr, "Usage: %s table item\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
 
-	longueur = strlen(argv[1]);
-	if ((table = malloc(longueur + 2)) == NULL) {
+	size = strlen(argv[1]);
+	if ((table = malloc(size + 2)) == NULL) {
 		perror("malloc");
 		exit(EXIT_FAILURE);
 	}
@@ -80,8 +80,8 @@ int main (int argc, char * argv[])
 	fprintf(stdout, "%s\n", table);
 
 	fprintf(stdout, "recherche / insertion de %c\n", argv[2][0]);
-	b_insert((void *) argv[2], table, & longueur, 1, compare_char);
-	table[longueur] = '\0';
+	b_insert((void *) argv[2], table, &size, 1, compare_char);
+	table[size] = '\0';
 	fprintf(stdout, "%s\n", table);
 
 	return EXIT_SUCCESS;

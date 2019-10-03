@@ -14,7 +14,7 @@ EXECUTABLES=	exemple-argv		\
 all : ${EXECUTABLES}
 
 exemple-options : exemple-options.c
-	cc ${CFLAGS} -DOPTIONS_LONGUES -D_GNU_SOURCE exemple-options.c -o exemple-options
+	cc ${CFLAGS} -DLONG_OPTIONS -D_GNU_SOURCE exemple-options.c -o exemple-options
 
 clean : 
 	@rm -f core *.o *.out *~

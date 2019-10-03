@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-sysinfo.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -13,6 +13,7 @@
 int main (void)
 {
 	struct sysinfo info;
+
 	if (sysinfo(& info) != 0) {
 		perror("sysinfo");
 		exit(1);
@@ -37,6 +38,7 @@ int main (void)
 	        info.freeswap  >> 20);
 	fprintf(stdout, "Nb processus en cours      : %d  \n",
 	        info.procs);
+
 	return EXIT_SUCCESS;
 }
 

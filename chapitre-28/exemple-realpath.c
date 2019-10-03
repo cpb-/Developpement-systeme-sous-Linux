@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-realpath.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -11,16 +11,17 @@
 
 int main (int argc, char * argv[])
 {
-	char chemin_complet [MAXPATHLEN];
+	char full_path [MAXPATHLEN];
 	int i;
 
 	for (i = 0; i < argc; i ++) {
 		fprintf(stderr, "%s : ", argv[i]);
-		if (realpath(argv[i], chemin_complet) == NULL)
+		if (realpath(argv[i], full_path) == NULL)
 			perror("");
 		else
-			fprintf(stderr, "%s\n", chemin_complet);
+			fprintf(stderr, "%s\n", full_path);
 	}
+
 	return EXIT_SUCCESS;
 }
 

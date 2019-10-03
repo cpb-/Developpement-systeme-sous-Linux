@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-mutex-type-2.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 
@@ -16,16 +16,10 @@ pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
 
 int main (void)
 {
-	fprintf(stderr, "Je verrouille le mutex...");
-	if (pthread_mutex_lock(& mtx) == 0)
-		fprintf(stderr, "Ok\n");
-	else
-		fprintf(stderr, "Erreur\n");
+	fprintf(stderr, "pthread_mutex_lock(): ");
+	fprintf(stderr, "%d\n", pthread_mutex_lock(&mtx));
 	sleep(1);
-	fprintf(stderr, "Je verrouille a nouveau le mutex...");
-	if (pthread_mutex_lock(& mtx) == 0)
-		fprintf(stderr, "Ok\n");
-	else
-		fprintf(stderr, "Erreur\n");
+	fprintf(stderr, "pthread_mutex_lock(): ");
+	fprintf(stderr, "%d\n", pthread_mutex_lock(&mtx));
 	pthread_exit(NULL);
 }

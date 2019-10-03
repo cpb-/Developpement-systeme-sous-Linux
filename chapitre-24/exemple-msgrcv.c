@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-msgrcv.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -14,7 +14,7 @@
 
 typedef struct {
 	long type;
-	char texte[256];
+	char text[256];
 } message_t;
 
 int main (int argc, char * argv[])
@@ -32,7 +32,7 @@ int main (int argc, char * argv[])
 		perror("ftok");
 		exit(EXIT_FAILURE);
 	}
-	if (sscanf(argv[2], "%ld", & type) != 1) {
+	if (sscanf(argv[2], "%ld", &type) != 1) {
 		fprintf(stderr, "Type invalide");
 		exit(EXIT_FAILURE);
 	}
@@ -40,10 +40,11 @@ int main (int argc, char * argv[])
 		perror("msgget");
 		exit(EXIT_FAILURE);
 	}
-	if (msgrcv(file, (void *) & message, 256, type, 0) >= 0)
-		fprintf(stdout, "(%ld) %s \n", message . type, message . texte);
+	if (msgrcv(file, (void *) &message, 256, type, 0) >= 0)
+		fprintf(stdout, "(%ld) %s \n", message.type, message.text);
 	else
 		perror("msgrcv");
+
 	return EXIT_SUCCESS;
 }
 

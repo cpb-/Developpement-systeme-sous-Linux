@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-getline.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #define _GNU_SOURCE
@@ -12,19 +12,21 @@
 
 int main (void)
 {
-	char *	chaine;
-	size_t	taille;
-	ssize_t	retour;
-	while (1) {
-		taille = 0;
-		chaine = NULL;
-		retour = getline(& chaine, & taille, stdin);	
-		if (retour == -1)
+	char  *string;
+	size_t length;
+	ssize_t size;
+
+	for (;;) {
+		length = 0;
+		string = NULL;
+		size = getline(& string, &length, stdin);
+		if (size == -1)
 			break;
-		fprintf(stdout, "%d caracteres lus\n", retour);
-		fprintf(stdout, "%d caracteres alloues\n", taille);
-		free(chaine);
+		fprintf(stdout, "%ld caracteres lus\n", size);
+		fprintf(stdout, "%ld caracteres alloues\n", length);
+		free(string);
 	}
+
 	return EXIT_SUCCESS;
 }
 

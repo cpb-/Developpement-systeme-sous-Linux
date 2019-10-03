@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-wcscoll.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -16,12 +16,12 @@ int main (int argc, char * argv[])
 	int i, n;
 	wchar_t * warg[2];
 
-	int	compar;
+	int	compare;
 
-	setlocale (LC_ALL, "");
+	setlocale(LC_ALL, "");
 
 	if (argc != 3) {
-		fprintf(stderr, "Syntaxe : %s chaine_1 chaine_2\n", argv[0]);
+		fprintf(stderr, "Usage: %s string_1 string_2\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
 	
@@ -35,9 +35,9 @@ int main (int argc, char * argv[])
 		mbstowcs(warg[i], argv[i+1], n);
 	}
 
-	compar = wcscoll(warg[0], warg[1]);
+	compare = wcscoll(warg[0], warg[1]);
 	fprintf(stdout, "%ls  %c %ls \n", warg[0],
-			(compar > 0 ? '>' : (compar == 0 ? '=' :  '<' )),
+			(compare > 0 ? '>' : (compare == 0 ? '=' :  '<' )),
 			warg[1]);
 	free(warg[1]);
 	free(warg[0]);

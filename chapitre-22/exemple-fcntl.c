@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-fcntl.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <fcntl.h>
@@ -14,9 +14,10 @@
 
 int main (int argc, char * argv[])
 {
-	char    numero[5];
-	int	fd;
-	int	etat;
+	char number[5];
+	int  fd;
+	int  status;
+
 	if ((argc != 2) 
 	 || ((strcasecmp(argv[1], "ferme") != 0)
 	  && (strcasecmp(argv[1], "laisse") != 0))) {
@@ -29,20 +30,21 @@ int main (int argc, char * argv[])
 		exit(EXIT_FAILURE);
 	}
 	write(fd, "AZERTYUIOP", 10);
-	if ((etat = fcntl(fd, F_GETFD)) < 0) {	
+	if ((status = fcntl(fd, F_GETFD)) < 0) {	
 		perror("fcntl");
 		exit(EXIT_FAILURE);
 	}
 	if (strcasecmp(argv[1] , "ferme") == 0)
-		etat |= FD_CLOEXEC;
+		status |= FD_CLOEXEC;
 	else 
-		etat &= ~FD_CLOEXEC;
-	if (fcntl(fd, F_SETFD, etat) < 0) {
+		status &= ~FD_CLOEXEC;
+	if (fcntl(fd, F_SETFD, status) < 0) {
 		perror("fcntl");
 		exit(EXIT_FAILURE);
 	}
-	snprintf(numero, 5, "%d", fd);
-	execlp("./verifie-descripteur", "./verifie-descripteur", numero, NULL);
+	snprintf(number, 5, "%d", fd);
+	execlp("./verifie-descripteur", "./verifie-descripteur", number, NULL);
 	perror("execlp");
+
 	exit(EXIT_FAILURE);
 }

@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-mutex-type-1.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <pthread.h>
@@ -12,27 +12,27 @@
 
 pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
 
-void * fonction_thread(void * arg);
+void * thread_function(void * arg);
 
 int main (void)
 {
 	pthread_t thr;
-	pthread_mutex_lock(& mtx);
-	pthread_create(& thr, NULL, fonction_thread, NULL);
+
+	pthread_mutex_lock(&mtx);
+	pthread_create(&thr, NULL, thread_function, NULL);
 	pause();
+
 	pthread_exit(NULL);
 }
 
-void * fonction_thread(void * arg)
+
+void * thread_function(void * arg)
 {
-	int ret;
-	fprintf(stderr, "Thread deverrouille le mutex : ");
-	ret = pthread_mutex_unlock(& mtx);
-	fprintf(stderr, "resultat %d\n", ret);
 	sleep(1);
-	fprintf(stderr, "Thread re-verrouille le mutex : ");
-	ret = pthread_mutex_lock(& mtx);
-	fprintf(stderr, "resultat %d\n", ret);
+	fprintf(stderr, "pthread_mutex_unlock() : %d\n",
+		pthread_mutex_unlock(&mtx));
+	sleep(1);
+	fprintf(stderr, "pthread_mutex_lock() : %d\n",
+		pthread_mutex_lock(&mtx));
 	pthread_exit(NULL);
 }
-

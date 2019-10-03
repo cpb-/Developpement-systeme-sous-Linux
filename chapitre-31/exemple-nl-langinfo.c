@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-nl-langinfo.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <locale.h>
@@ -13,7 +13,7 @@
 int main (void)
 {
 	int	i;
-	char *  libelles[] = {
+	char *  label[] = {
 		"YESEXPR", "NOEXPR",
 		"ABDAY_1", "ABDAY_7",
 		"ABMON_1", "ABMON_12",
@@ -24,7 +24,7 @@ int main (void)
 		"T_FMT",   "T_FMT_AMPM",
 		NULL
 	};
-	nl_item objet[] = {
+	nl_item item[] = {
 		YESEXPR, NOEXPR,
 		ABDAY_1, ABDAY_7,
 		ABMON_1, ABMON_12,
@@ -36,7 +36,7 @@ int main (void)
 		0
 	};
 	setlocale(LC_ALL, "");
-	for (i = 0; libelles[i] != NULL; i ++)
-		fprintf(stdout, "%10s = \"%s\"\n", libelles[i], nl_langinfo(objet [i]));
+	for (i = 0; label[i] != NULL; i ++)
+		fprintf(stdout, "%10s = \"%s\"\n", label[i], nl_langinfo(item[i]));
 	return EXIT_SUCCESS;
 }

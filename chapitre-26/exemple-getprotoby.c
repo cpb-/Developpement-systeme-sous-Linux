@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-getprotoby.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <netdb.h>
@@ -12,12 +12,12 @@
 int main (int argc, char * argv [])
 {
 	int    i, j;
-	int    numero;
-	struct protoent * proto;
+	int    number;
+	struct protoent *proto;
 
 	for (i = 1; i < argc; i ++) {
-		if (sscanf(argv[i], "%d", & numero) == 1)
-			proto = getprotobynumber(numero);
+		if (sscanf(argv[i], "%d", &number) == 1)
+			proto = getprotobynumber(number);
 		else
 			proto = getprotobyname(argv[i]);
 		fprintf(stdout, "%s : ", argv[i]);
@@ -25,11 +25,12 @@ int main (int argc, char * argv [])
 			fprintf(stdout, "inconnu \n");
 			continue;
 		}
-		fprintf(stdout, "%s ( ", proto -> p_name);
+		fprintf(stdout, "%s ( ", proto->p_name);
 		for (j = 0; proto->p_aliases[j] != NULL; j ++)
 			fprintf(stdout, "%s ", proto->p_aliases[j]);
-		fprintf(stdout, ") numero = %d \n", proto->p_proto);
+		fprintf(stdout, ") number = %d \n", proto->p_proto);
 	}
+
 	return EXIT_SUCCESS;
 }
 

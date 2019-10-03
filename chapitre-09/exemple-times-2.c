@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-times-2.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -13,19 +13,19 @@
 
 int main (int argc, char * argv[])
 {
-	struct tms mesure;
-	double duree_ecoulee;
+	struct tms measure;
+	double duration;
 
 	if (argc != 2) {
-		fprintf(stderr, "Syntaxe : %s <commande> \n", argv [0]);
+		fprintf(stderr, "Usage: %s <command> \n", argv [0]);
 		exit(EXIT_FAILURE);
 	}
 	system(argv[1]);
-	times(& mesure);
-	duree_ecoulee = (double) mesure.tms_cutime / sysconf(_SC_CLK_TCK);
-	fprintf(stdout, "Temps CPU mode utilisateur = %f \n", duree_ecoulee);
-	duree_ecoulee = (double) mesure.tms_cstime / sysconf(_SC_CLK_TCK);
-	fprintf(stdout, "Temps CPU en mode noyau    = %f \n", duree_ecoulee);
+	times(&measure);
+	duration = (double) measure.tms_cutime / sysconf(_SC_CLK_TCK);
+	fprintf(stdout, "CPU time in user mode   = %f \n", duration);
+	duration = (double) measure.tms_cstime / sysconf(_SC_CLK_TCK);
+	fprintf(stdout, "CPU time in kernel mode = %f \n", duration);
 	return EXIT_SUCCESS;
 }
 

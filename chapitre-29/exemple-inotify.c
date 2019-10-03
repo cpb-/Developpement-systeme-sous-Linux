@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-inotify.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <limits.h>
@@ -12,7 +12,7 @@
 #include <sys/inotify.h>
 
 
-void affiche_evenement(struct inotify_event * event)
+void diplay_event(struct inotify_event *event)
 {
 	if (event->len > 0)
 		fprintf(stdout, "%s : ", event->name);
@@ -43,10 +43,11 @@ void affiche_evenement(struct inotify_event * event)
 	fprintf(stdout, "\n");
 }
 
-int main(int argc, char * argv[])
+int main(int argc, char *argv[])
 {
 	int fd;
-	struct inotify_event * event;
+	struct inotify_event *event;
+
 	event = malloc(sizeof(struct inotify_event) + PATH_MAX);
 	if (argc != 2) {
 		fprintf(stderr, "usage: %s repertoire\n", argv[0]);
@@ -62,7 +63,7 @@ int main(int argc, char * argv[])
 
 	}
 	while (read(fd, event, sizeof(struct inotify_event) + PATH_MAX) > 0) {
-		affiche_evenement(event);
+		diplay_event(event);
 	}
 	return EXIT_SUCCESS;
 }

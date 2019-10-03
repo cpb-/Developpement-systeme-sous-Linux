@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-sizeof.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -19,6 +19,7 @@ int main (void)
 	printf("sizeof(double)        = %lu\n", sizeof(double));
 	printf("sizeof(long double)   = %lu\n", sizeof(long double));
 	printf("sizeof(void *)        = %lu\n", sizeof(void *));
+
 	return EXIT_SUCCESS;
 }
 

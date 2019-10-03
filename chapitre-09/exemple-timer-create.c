@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-timer-create.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <signal.h>
@@ -11,39 +11,41 @@
 #include <time.h>
 #include <unistd.h>
 
-	volatile int compteur = 0;
+	volatile int counter = 0;
 
-void gestionnaire_usr1(int numero)
+void usr1_handler(int num)
 {
-	compteur ++;
+	counter++;
 }
-void gestionnaire_usr2(int numero)
+
+
+void usr2_handler(int num)
 {
-	fprintf(stderr, "%d\n", compteur);
-	compteur = 0;
+	fprintf(stderr, "%d\n", counter);
+	counter = 0;
 }
 
 int main(int argc, char * argv[])
 {
-	long int        frequence;
+	long int        frequency;
 	timer_t timer1, timer2;
 	struct sigevent event;
 	struct itimerspec itimer;
 
 	if ((argc != 2)
-	 || (sscanf(argv[1], "%ld", & frequence) != 1)
-	 || (frequence < 2) || (frequence > 1000000000)) {
-		fprintf(stderr, "usage: %s frequence\n", argv[0]);
+	 || (sscanf(argv[1], "%ld", &frequency) != 1)
+	 || (frequency < 2) || (frequency > 1000000000)) {
+		fprintf(stderr, "usage: %s frequency\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
 
-	signal(SIGUSR1, gestionnaire_usr1);
-	signal(SIGUSR2, gestionnaire_usr2);
+	signal(SIGUSR1, usr1_handler);
+	signal(SIGUSR2, usr2_handler);
 
 	event.sigev_notify = SIGEV_SIGNAL;
 	event.sigev_signo  = SIGUSR1;
 	
-	if (timer_create(CLOCK_REALTIME, & event, & timer1) != 0) {
+	if (timer_create(CLOCK_REALTIME, &event, &timer1) != 0) {
 		perror("timer_create");
 		exit(EXIT_FAILURE);
 	}
@@ -51,17 +53,17 @@ int main(int argc, char * argv[])
 	event.sigev_notify = SIGEV_SIGNAL;
 	event.sigev_signo  = SIGUSR2;
 
-	if (timer_create(CLOCK_REALTIME, & event, & timer2) != 0) {
+	if (timer_create(CLOCK_REALTIME, &event, &timer2) != 0) {
 		perror("timer_create");
 		exit(EXIT_FAILURE);
 	}
 
 	itimer.it_value.tv_sec = 0;
-	itimer.it_value.tv_nsec = 1000000000/frequence;
+	itimer.it_value.tv_nsec = 1000000000/frequency;
 	itimer.it_interval.tv_sec = 0;
-	itimer.it_interval.tv_nsec = 1000000000/frequence;
+	itimer.it_interval.tv_nsec = 1000000000/frequency;
 
-	if (timer_settime(timer1, 0, & itimer, NULL) != 0) {
+	if (timer_settime(timer1, 0, &itimer, NULL) != 0) {
 		perror("timer_settime");
 		exit(EXIT_FAILURE);
 	}
@@ -71,7 +73,7 @@ int main(int argc, char * argv[])
 	itimer.it_interval.tv_sec = 1;
 	itimer.it_interval.tv_nsec = 0;
 
-	if (timer_settime(timer2, 0, & itimer, NULL) != 0) {
+	if (timer_settime(timer2, 0, &itimer, NULL) != 0) {
 		perror("timer_settime");
 		exit(EXIT_FAILURE);
 	}

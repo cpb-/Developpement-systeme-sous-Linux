@@ -1,40 +1,40 @@
 // ------------------------------------------------------------------
 // exemple-stpncpy.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #define _GNU_SOURCE
-	
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-void concatenation (char * destination, size_t taille_maxi, ...)
+void concatenate(char * dest, size_t max_size, ...)
 {
 	va_list arguments;
 	char *	source;
-	char *	retour;
-	size_t	taille_chaine;
+	char *	result;
+	size_t	string_size;
 
-	retour = destination;
-	taille_chaine = 0;
+	result = dest;
+	string_size = 0;
 
-	va_start(arguments, taille_maxi);
+	va_start(arguments, max_size);
 
 	while (1) {
 		source = va_arg(arguments, char *);
 		if (source == NULL)
 			/* fin des arguments */
 			break;
-		retour = stpncpy(retour, source, taille_maxi - taille_chaine);
-		taille_chaine = retour - destination;
-		if (taille_chaine == taille_maxi) {
+		result = stpncpy(result, source, max_size - string_size);
+		string_size = result - dest;
+		if (string_size >= max_size) {
 			/* Ecraser le dernier caractere par un zero */
-			retour --; 
-			* retour = '\0';
+			result --;
+			*result = '\0';
 			break;
 		}
 	}
@@ -43,13 +43,13 @@ void concatenation (char * destination, size_t taille_maxi, ...)
 
 int main (void)
 {
-	char chaine[20];
+	char string[20];
 
-	concatenation(chaine, 20, "123", "456", "7890", "1234", NULL);
-	fprintf(stdout, "%s\n", chaine);
+	concatenate(string, 20, "123", "456", "7890", "1234", NULL);
+	fprintf(stdout, "%s\n", string);
 
-	concatenation(chaine, 20, "1234567890", "1234567890", "123", NULL);
-	fprintf(stdout, "%s\n", chaine);
+	concatenate(string, 20, "1234567890", "1234567890", "123", NULL);
+	fprintf(stdout, "%s\n", string);
 
 	return EXIT_SUCCESS;
 }

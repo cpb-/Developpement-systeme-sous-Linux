@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-strerror.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -28,6 +28,6 @@ int main (void)
 	fprintf(stdout, "strerror(EPERM)  = %s\n", strerror(EPERM) );
 	fprintf(stdout, "strerror(EPIPE)  = %s\n", strerror(EPIPE) );
 	fprintf(stdout, "strerror(ESRCH)  = %s\n", strerror(ESRCH) );
-	
+
 	return EXIT_SUCCESS;
 }

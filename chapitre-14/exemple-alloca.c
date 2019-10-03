@@ -1,28 +1,28 @@
 // ------------------------------------------------------------------
 // exemple-alloca.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
 #include <stdlib.h>
 
-void fonction_recursive (int iteration)
+void recursive_function(int iteration)
 {
-	char * bloc;
+	char * block;
 
-	fprintf(stdout, "Iteration %d\n", iteration);
+	fprintf(stdout, "Iteration #%d\n", iteration);
 	fflush(stdout);
-	if ((bloc = alloca(512 * 1024)) == NULL) {
-		fprintf(stdout, "Echec\n");
+	if ((block = alloca(512 * 1024)) == NULL) {
+		fprintf(stdout, "failed\n");
 		return;
 	}
-	fonction_recursive(iteration + 1);
+	recursive_function(iteration + 1);
 }
 
 int main (void)
 {
-	fonction_recursive(1);
+	recursive_function(1);
 	return EXIT_SUCCESS;
 }

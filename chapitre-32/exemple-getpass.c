@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-getpass.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -11,8 +11,10 @@
 
 int main (void)
 {
-	char * chaine;
-	chaine = getpass("Mot de passe : ");
-	fprintf(stdout, "Le mot de passe saisi est \"%s\" \n", chaine);
+	char * string;
+
+	string = getpass("Mot de passe : ");
+	fprintf(stdout, "Le mot de passe saisi est \"%s\" \n", string);
+
 	return EXIT_SUCCESS;
 }

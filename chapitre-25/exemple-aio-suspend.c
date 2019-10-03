@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-aio-suspend.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <aio.h>
@@ -20,10 +20,10 @@ int main (int argc, char * argv[])
 	int              i;
 	struct aiocb     cb[NB_OP];
 	char             buffer[256][NB_OP];
-	
+
 	struct sigevent  lio_sigev;
 	struct aiocb *   lio[NB_OP];
-	
+
 	if (argc != 2) {
 		fprintf(stderr, "Syntaxe : %s fichier\n", argv[0]);
 		exit(EXIT_FAILURE);
@@ -61,7 +61,7 @@ int main (int argc, char * argv[])
 			for (i = 0; i < NB_OP; i ++)
 				if (lio[i] != NULL)
 					if (aio_error(lio[i]) != EINPROGRESS) {
-						fprintf(stdout, "Lecture %d : %d octets \n",
+						fprintf(stdout, "Lecture %d : %ld octets \n",
 								i, aio_return(lio[i]));
 						lio[i] = NULL;
 					}

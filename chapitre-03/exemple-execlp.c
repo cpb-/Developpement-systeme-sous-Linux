@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-execlp.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -11,7 +11,7 @@
 
 int main (int argc, char * argv [])
 {
-	char compteur[2];
+	char counter[2];
 	int i;
 
 	i = 0;
@@ -20,11 +20,11 @@ int main (int argc, char * argv [])
 
 	if (i < 5) {
 		i ++;
-		sprintf(compteur, "%d", i);
+		sprintf(counter, "%d", i);
 
 		fprintf(stdout, "execlp(%s, %s, %s, NULL)\n",
-		        argv[0], argv[0], compteur);
-		execlp(argv[0], argv[0], compteur, (char *) NULL);
+		        argv[0], argv[0], counter);
+		execlp(argv[0], argv[0], counter, (char *) NULL);
 	}
 	return 0;
 }

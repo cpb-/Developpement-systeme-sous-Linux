@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-mbtowcs.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <locale.h>
@@ -17,7 +17,7 @@ int main(int argc, char * argv[])
 	setlocale(LC_ALL, "");
 
 	for (i = 1; i < argc; i ++) {
-		fprintf(stdout, "Argument %d :\n", i);
+		fprintf(stdout, "Argument #%d:\n", i);
 		fprintf(stdout, "  Sequence multi-octets : ");
 		for (j = 0; argv[i][j] != '\0'; j ++)
 			fprintf(stdout, "%02x ", (unsigned char) (argv[i][j]));

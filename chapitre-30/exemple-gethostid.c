@@ -1,16 +1,19 @@
 // ------------------------------------------------------------------
-// exemple-gets.c
+// exemple-gethostid.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
+#include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 int main (void)
 {
-	char chaine[128];
+	fprintf(stdout, "%ld\n", gethostid());
 
-	return (gets(chaine) != NULL);
+	return EXIT_SUCCESS;
 }
 

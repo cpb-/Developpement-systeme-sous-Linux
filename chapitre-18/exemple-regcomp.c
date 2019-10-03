@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-regcomp.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <regex.h>
 
-void affiche_syntaxe (char * nom_prog)
+void display_options (char * nom_prog)
 {
 	fprintf(stderr, "Syntaxe : %s [options] motif\n", nom_prog);
 	fprintf(stderr, " Options :\n");
@@ -28,114 +28,113 @@ void affiche_syntaxe (char * nom_prog)
 int main (int argc, char * argv[])
 {
 	int     option;
-	char *  liste_options = "eisndf";
 
-	int     option_regcomp = 0;
-	int     option_regexec = 0;
-	regex_t motif_compile;
+	int     opt_regcomp = 0;
+	int     opt_regexec = 0;
+	regex_t compiled_regex;
 
-	int     erreur;
-	char *  message_erreur;
-	size_t  lg_message;
+	int     err;
+	char   *err_message;
+	size_t  message_len;
 
-	size_t  nb_sous_chaines = 0;
-	regmatch_t * sous_chaines = NULL;	
+	size_t  match_count = 0;
+	regmatch_t *matches = NULL;	
 
-	char    ligne[LG_MAXI];
-	char    sous_chaine[LG_MAXI];
-	size_t  lg_sous_chaine;
+	char    line[LG_MAXI];
+	char    substring[LG_MAXI];
+	size_t  substring_len;
 	int     i;
 
 	opterr = 0; // pas de message d'erreur de getopt()
-	while ((option = getopt(argc, argv, liste_options)) != -1 ){
+	while ((option = getopt(argc, argv, "eisndf")) != -1 ){
 		switch (option) {
 			case 'e' :
-				option_regcomp |= REG_EXTENDED;
+				opt_regcomp |= REG_EXTENDED;
 				break;
 			case 'i' :
-				option_regcomp |= REG_ICASE;
+				opt_regcomp |= REG_ICASE;
 				break;
 			case 's' :
-				option_regcomp |= REG_NOSUB;
+				opt_regcomp |= REG_NOSUB;
 				break;
 			case 'n' :
-				option_regcomp |= REG_NEWLINE;
+				opt_regcomp |= REG_NEWLINE;
 				break;
 			case 'd' :
-				option_regexec |= REG_NOTBOL;
+				opt_regexec |= REG_NOTBOL;
 				break;
 			case 'f' :
-				option_regexec |= REG_NOTEOL;
+				opt_regexec |= REG_NOTEOL;
 				break;
 			case '?' :
-				affiche_syntaxe (argv [0]);
+				display_options(argv [0]);
 				exit (1);
 		}
 	}
 	if (argc - optind != 1) {
 		// il manque le motif
-		affiche_syntaxe(argv[0]);
+		display_options(argv[0]);
 		exit(EXIT_FAILURE);
 	}
 
-	erreur = regcomp(& motif_compile, argv[argc - 1], option_regcomp);
-	if (erreur != 0) {
-		lg_message = regerror(erreur, & motif_compile, NULL, 0);
-		message_erreur = malloc(lg_message);
-		if (message_erreur == NULL) {
+	err = regcomp(&compiled_regex, argv[argc - 1], opt_regcomp);
+	if (err != 0) {
+		message_len = regerror(err, &compiled_regex, NULL, 0);
+		err_message = malloc(message_len);
+		if (err_message == NULL) {
 			perror("malloc");
 			exit(EXIT_FAILURE);
 		}
-		regerror(erreur, & motif_compile, message_erreur, lg_message);
-		fprintf(stderr, "%s\n", message_erreur);
-		free(message_erreur);
+		regerror(err, &compiled_regex, err_message, message_len);
+		fprintf(stderr, "%s\n", err_message);
+		free(err_message);
 		exit(EXIT_FAILURE);
 	}
 
-	if ((option_regcomp & REG_NOSUB) == 0) {
-		nb_sous_chaines = motif_compile.re_nsub + 1;
-		sous_chaines = calloc(nb_sous_chaines, sizeof (regmatch_t));
-		if (sous_chaines == NULL) {
+	if ((opt_regcomp & REG_NOSUB) == 0) {
+		match_count = compiled_regex.re_nsub + 1;
+		matches = calloc(match_count, sizeof (regmatch_t));
+		if (matches == NULL) {
 			perror("calloc");
 			exit(EXIT_FAILURE);
 		}
 	}
 
-	while (fgets(ligne, LG_MAXI, stdin) != NULL) {
+	while (fgets(line, LG_MAXI, stdin) != NULL) {
 
-		erreur = regexec(& motif_compile, ligne, nb_sous_chaines,
-				sous_chaines, option_regexec);
-		if (erreur == REG_NOMATCH) {
+		err = regexec(&compiled_regex, line, match_count,
+				matches, opt_regexec);
+		if (err == REG_NOMATCH) {
 			fprintf(stdout, "Pas de correspondance\n");
 			continue;
 		}
-		if (erreur == REG_ESPACE) {
+		if (err == REG_ESPACE) {
 			fprintf(stderr, "Pas assez de memoire\n");
 			exit(EXIT_FAILURE);
 		}
 
 		fprintf(stdout, "Correspondance Ok\n");
 
-		if ((option_regcomp & REG_NOSUB) != 0)
+		if ((opt_regcomp & REG_NOSUB) != 0)
 			continue;
 
-		for (i = 0; i < nb_sous_chaines; i ++) {
-			lg_sous_chaine = sous_chaines[i].rm_eo - sous_chaines[i].rm_so;
-			strncpy (sous_chaine, ligne + sous_chaines[i].rm_so, lg_sous_chaine);
-			sous_chaine[lg_sous_chaine] = '\0';
+		for (i = 0; i < match_count; i ++) {
+			substring_len = matches[i].rm_eo - matches[i].rm_so;
+			strncpy (substring, line + matches[i].rm_so, substring_len);
+			substring[substring_len] = '\0';
 			if (i == 0) 
-				fprintf (stdout, "expression : %s\n", sous_chaine);
+				fprintf (stdout, "expression : %s\n", substring);
 			else
-				fprintf (stdout, "ss-expr %02d : %s\n", i, sous_chaine);
+				fprintf (stdout, "ss-expr %02d : %s\n", i, substring);
 		}
 	}
 
 	// Ces liberations seraient indispensables si l'on voulait
 	// compiler un nouveau motif
-	free(sous_chaines);
-	sous_chaines = NULL;
-	nb_sous_chaines = 0;
-	regfree(& motif_compile);
+	free(matches);
+	matches = NULL;
+	match_count = 0;
+	regfree(&compiled_regex);
 
 	return EXIT_SUCCESS;
 }

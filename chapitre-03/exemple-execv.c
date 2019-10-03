@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-execv.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <fcntl.h>
@@ -15,7 +15,7 @@ int main (int argc, char * argv[])
 {
 	int fd;
 
-	char * nv_argv[] = { "./exemple-execvp", (char *) NULL };
+	char * my_argv[] = { "./exemple-execvp", (char *) NULL };
 
  	fprintf(stdout, "Essai d'ouverture de %s\n", argv[0]);
 	if ((fd = open(argv[0], O_WRONLY | O_APPEND)) < 0) {
@@ -35,7 +35,7 @@ int main (int argc, char * argv[])
 
 	fprintf(stdout, "  Ok\n");
 	fprintf(stdout, "Essai d'executer exemple-execvp\n");
-	execv("./exemple-execvp", nv_argv);
+	execv("./exemple-execvp", my_argv);
 
 	if (errno == ETXTBSY)
 		fprintf(stdout, "  echec ETXTBSY fichier deja utilise\n");

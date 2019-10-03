@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-mq-receive.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <fcntl.h>
@@ -17,7 +17,7 @@ int main (int argc, char * argv[])
 	mqd_t  mq;
 	struct mq_attr attr;
 	char * buffer = NULL;
-	unsigned int priorite;
+	unsigned int priority;
 
 	if (argc != 2) {
 		fprintf(stderr, "Syntaxe : %s file\n", argv[0]);
@@ -35,10 +35,11 @@ int main (int argc, char * argv[])
 		perror("malloc");
 		exit(EXIT_FAILURE);
 	}
-	if ((n = mq_receive(mq, buffer, attr.mq_msgsize, & priorite)) < 0) {
+	if ((n = mq_receive(mq, buffer, attr.mq_msgsize, &priority)) < 0) {
 		perror("mq_send");
 		exit(EXIT_FAILURE);
 	}
-	fprintf(stdout, "[%d] %s\n", priorite, buffer);
+	fprintf(stdout, "[%d] %s\n", priority, buffer);
+
 	return EXIT_SUCCESS;
 }

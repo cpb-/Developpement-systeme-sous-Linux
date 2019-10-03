@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-rusage.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -12,31 +12,31 @@
 
 int main (int argc, char * argv[])
 {
-	int lesquelles;
-	struct rusage statistiques;
+	int which;
+	struct rusage stats;
 
 	if (argc == 1) {
-		lesquelles = RUSAGE_SELF;
+		which = RUSAGE_SELF;
 	} else {
 		system(argv[1]);
-		lesquelles = RUSAGE_CHILDREN;
+		which = RUSAGE_CHILDREN;
 	}
-	if (getrusage(lesquelles, & statistiques) != 0) {
-		fprintf(stderr, "Impossible d'obtenir les statistiques \n");
+	if (getrusage(which, &stats) != 0) {
+		fprintf(stderr, "Unable to get statistics \n");
 		exit(EXIT_FAILURE);
 	}
-	fprintf(stdout, "Temps en mode utilisateur  %ld s. et %ld ms \n",
-	        statistiques.ru_utime.tv_sec,
-	        statistiques.ru_utime.tv_usec / 1000);
-	fprintf(stdout, "Temps en mode noyau        %ld s. et %ld ms \n",
-	        statistiques.ru_stime.tv_sec,
-	        statistiques.ru_stime.tv_usec / 1000);
+	fprintf(stdout, "Time in user mode  %ld s. %ld ms \n",
+	        stats.ru_utime.tv_sec,
+	        stats.ru_utime.tv_usec / 1000);
+	fprintf(stdout, "Time in kernel mode  %ld s. %ld ms \n",
+	        stats.ru_stime.tv_sec,
+	        stats.ru_stime.tv_usec / 1000);
 	fprintf(stdout, "\n");
-	fprintf(stdout, "Nombre de fautes de pages mineures : %ld \n",
-	        statistiques.ru_minflt);
-	fprintf(stdout, "Nombre de fautes de pages majeures : %ld \n",
-	        statistiques.ru_majflt);
-	fprintf(stdout, "Nombre de swaps du processus       : %ld \n",
-	        statistiques.ru_nswap);
+	fprintf(stdout, "Minor page faults : %ld \n",
+	        stats.ru_minflt);
+	fprintf(stdout, "Major page faults : %ld \n",
+	        stats.ru_majflt);
+	fprintf(stdout, "Process swaps     : %ld \n",
+	        stats.ru_nswap);
 	return EXIT_SUCCESS;
 }

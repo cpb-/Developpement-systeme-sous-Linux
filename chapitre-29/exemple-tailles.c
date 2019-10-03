@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-taillles.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-void affiche_status (struct stat * status)
+void display_status(struct stat *status)
 {
 	if (S_ISBLK(status->st_mode))
 		fprintf(stderr, "bloc ");
@@ -41,20 +41,21 @@ int main (int argc, char * argv[])
 		if (fstat(STDIN_FILENO, & status) < 0)
 			perror("");
 		else
-			affiche_status(& status);
+			display_status(& status);
 		fprintf(stderr, "stdout : ");
 		if (fstat(STDOUT_FILENO, & status) < 0)
 			perror("");
 		else
-			affiche_status(& status);
+			display_status(& status);
 	} else {
 		for (i = 1; i < argc ; i ++) {
 			fprintf(stderr, "%s : ", argv[i]);
 			if (lstat(argv[i], & status) < 0)
 				perror("");
 			else
-				affiche_status(& status);
+				display_status(& status);
 		}
 	}
 	return EXIT_SUCCESS;
 }
+

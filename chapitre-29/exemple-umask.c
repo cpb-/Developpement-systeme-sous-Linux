@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-umask.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <fcntl.h>
@@ -14,10 +14,10 @@
 int main (void)
 {
 	int	fd;
-	int	masque;
+	int	mask;
 
-	masque = umask(0);
-	fprintf(stdout, "Ancien masque = %o, nouveau = 0 \n", masque);
+	mask = umask(0);
+	fprintf(stdout, "Ancien masque = %o, nouveau = 0 \n", mask);
 	fprintf(stdout, "Tentative de creation de essai.umask \n");
 	fd = open("essai.umask", O_RDWR | O_CREAT | O_EXCL, 0777);
 	if (fd < 0)
@@ -27,8 +27,8 @@ int main (void)
 	system("ls -l essai.umask");
 	unlink("essai.umask");
 
-	umask(masque);
-	fprintf(stdout, "Remise masque = %o \n", masque);
+	umask(mask);
+	fprintf(stdout, "Remise masque = %o \n", mask);
 	fprintf(stdout, "Tentative de creation de essai.umask \n");
 	fd = open("essai.umask", O_RDWR | O_CREAT | O_EXCL, 0777);
 	if (fd < 0)

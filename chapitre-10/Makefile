@@ -10,9 +10,6 @@ EXECUTABLES=                                 \
 		exemple-sched-getcpu         \
 		exemple-pthread-setaffinity  \
 		exemple-get-priority-min-max \
-		exemple-getscheduler         \
-		exemple-boucle-temps-reel    \
-		exemple-ordonnancement       \
 
 
 

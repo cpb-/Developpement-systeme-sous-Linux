@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-getpgid.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #define _GNU_SOURCE
@@ -17,18 +17,18 @@ int main (int argc, char * argv[])
 	long int pgid;
 
 	if (argc == 1) {
-		fprintf(stdout, "%d : %d\n", getpid(), getpgid(0));
+		fprintf(stdout, "%d: %d\n", getpid(), getpgid(0));
 		return 0;
 	}
 	for (i = 1; i < argc; i ++) {
 		if (sscanf(argv[i], "%ld", & pid) != 1) {
-			fprintf(stderr, "PID invalide : %s\n", argv[i]);
+			fprintf(stderr, "invalid PID: %s\n", argv[i]);
 		} else {
 			pgid = (long) getpgid((pid_t) pid);
 			if (pgid == -1)
-				fprintf(stderr, "%ld inexistant\n", pid);
+				fprintf(stderr, "%ld: doesn't exist\n", pid);
 			else
-				fprintf(stderr, "%ld : %ld\n", pid, pgid);
+				fprintf(stderr, "%ld: %ld\n", pid, pgid);
 		}
 	}
 	return 0;

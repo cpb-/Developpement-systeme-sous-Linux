@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-unlink.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -12,7 +12,7 @@
 int main (void)
 {
 	FILE * fp;
-	char   chaine[27];
+	char   string[27];
 
 	printf("Creation fichier\n");
 	fp = fopen("essai.unlink", "w+");
@@ -34,13 +34,14 @@ int main (void)
 		perror("fseek");
 		exit(EXIT_FAILURE);
 	}
-	if (fgets(chaine, 27, fp) == NULL) {
+	if (fgets(string, 27, fp) == NULL) {
 		perror("fgets");
 		exit(EXIT_FAILURE);
 	}
-	printf("Lu : %s\n", chaine);
+	printf("Lu : %s\n", string);
 	printf("Fermeture fichier\n");
 	fclose(fp);
+
 	return EXIT_SUCCESS;
 }
 

@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-infinis.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #define _XOPEN_SOURCE 600
@@ -13,9 +13,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-void affiche_nombre (const char * chaine, double d)
+void display_number(const char *string, double d)
 {
-	fprintf(stdout, "%s", chaine);
+	fprintf(stdout, "%s", string);
 	if (isnan(d))
 		fprintf(stdout, "Indefini\n");
 	else if (isinf(d) == 1)
@@ -32,20 +32,21 @@ int main (void)
 
 	d = +0.0;
 	d = 1.0 / d;
-	affiche_nombre("1 / +0 = ", d);
+	display_number("1 / +0 = ", d);
 	d = -0.0;
 	d = 1.0 / d;
-	affiche_nombre("1 / -0 = ", d);
+	display_number("1 / -0 = ", d);
 	d = 0.0 / 0.0;
-	affiche_nombre("0 /  0 = ", d);
+	display_number("0 /  0 = ", d);
 	d = log (0.0);
-	affiche_nombre("log(0) = ", d);
+	display_number("log(0) = ", d);
 	d = log (-1.0);
-	affiche_nombre("log(-1)= ", d);
+	display_number("log(-1)= ", d);
 	d = MAXFLOAT;
-	affiche_nombre("MAXFLOAT = ", d);
+	display_number("MAXFLOAT = ", d);
 	d = exp(MAXFLOAT);
-	affiche_nombre("exp(MAXFLOAT)= ", d);
+	display_number("exp(MAXFLOAT)= ", d);
+
 	return EXIT_SUCCESS;
 }
 

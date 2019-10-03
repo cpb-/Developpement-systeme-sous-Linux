@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-shmat.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -15,7 +15,7 @@
 #include <sys/types.h>
 
 typedef union semun {
-	int                  val;
+	int                  value;
 	struct   semid_ds *  buffer;
 	unsigned short int * table;
 } semun_t;	
@@ -27,8 +27,8 @@ int main (int argc, char * argv[])
 	int           shm;
 	struct sembuf sembuf;
 	semun_t       u_semun;
-	int *         compteur = NULL;
-	unsigned short table [1] = {1};
+	int *         counter = NULL;
+	unsigned short table[1] = {1};
 	
 	if (argc != 2) {
 		fprintf(stderr, "Syntaxe : %s fichier_cle \n", argv[0]);
@@ -42,7 +42,7 @@ int main (int argc, char * argv[])
 		perror("shmget");
 		exit(EXIT_FAILURE);
 	}
-	if ((compteur = shmat(shm, NULL, 0)) == (void *)-1) {
+	if ((counter = shmat(shm, NULL, 0)) == (void *)-1) {
 		perror("shmat");
 		exit(EXIT_FAILURE);
 	}
@@ -59,22 +59,23 @@ int main (int argc, char * argv[])
 	sembuf.sem_flg = SEM_UNDO;
 	while (1) {
 		// P() 	
-		sembuf.sem_op  = -1;
-		if (semop(sem, & sembuf, 1) < 0) {
+		sembuf.sem_op = -1;
+		if (semop(sem, &sembuf, 1) < 0) {
 			perror("semop");
 			exit(EXIT_FAILURE);
 		}
-		// Incrementation du compteur
-		(* compteur) ++;
-		fprintf(stdout, "%d\n", *compteur);
+		// Incrementation du counter
+		(* counter) ++;
+		fprintf(stdout, "%d\n", *counter);
 		// V()
 		sembuf.sem_op = 1;
-		if (semop(sem, & sembuf, 1) < 0) {
+		if (semop(sem, &sembuf, 1) < 0) {
 			perror("semop");
 			exit(EXIT_FAILURE);
 		}
 		sleep(1);
 	}
+
 	return EXIT_SUCCESS;
 }
 

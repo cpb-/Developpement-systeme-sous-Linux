@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-check.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -13,12 +13,12 @@
 int main (void)
 {
 	int  i;
-	char * table;
+	char *table;
 
 	fprintf(stdout, "Allocation de la table\n");	
 	table = malloc(NB_CHAR);
 
-	fprintf(stdout, "On deborde vers le haut\n");
+	fprintf(stdout, "Debordement vers le haut\n");
 	for (i = 0; i <= NB_CHAR; i ++)
 		table[i] = 1;
 	
@@ -28,7 +28,7 @@ int main (void)
 	fprintf(stdout, "Allocation de la table\n");	
 	table = malloc(NB_CHAR);
 
-	fprintf(stdout, "On deborde vers le bas\n");
+	fprintf(stdout, "Debordement vers le bas\n");
 	i = NB_CHAR;
 	while (i >= 0)
 		table[--i] = 1;
@@ -46,7 +46,7 @@ int main (void)
 	fprintf(stdout, "Liberation de la table\n");
 	free(table);
 
-	fprintf(stdout, "Et re-liberation de la table !\n");
+	fprintf(stdout, "Double liberation de la table !\n");
 	free(table);
 
 	return EXIT_SUCCESS;

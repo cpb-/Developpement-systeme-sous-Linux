@@ -1,12 +1,11 @@
 // ------------------------------------------------------------------
 // exemple-setgroups.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
-#define _BSD_SOURCE
-
+#define _DEFAULT_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -16,50 +15,51 @@
 
 int main (int argc, char * argv [])
 {
-	gid_t * table_gid = NULL;
+	gid_t * gid_table = NULL;
 	int     i;
-	int     taille;
+	int     size;
 
 	if (argc < 2) {
 		fprintf(stderr, "Usage %s GID ...\n", argv[0]);
 		return 1;
 	}
-	if ((table_gid = calloc(argc - 1, sizeof(gid_t))) == NULL) {
-		fprintf(stderr, "Erreur calloc, errno = %d\n", errno);
+	if ((gid_table = calloc(argc - 1, sizeof(gid_t))) == NULL) {
+		fprintf(stderr, "Error in calloc(), errno = %d\n", errno);
 		return 1;
 	}
 	for (i = 1; i < argc ; i ++) {
-		if (sscanf(argv[i], "%u", & (table_gid[i - 1])) != 1) {
-			fprintf(stderr, "GID invalide : %s\n", argv[i]);
+		if (sscanf(argv[i], "%u", &(gid_table[i - 1])) != 1) {
+			fprintf(stderr, "invalid GID: %s\n", argv[i]);
 			return 1;
 		}
 	}
-	if (setgroups(i - 1, table_gid) < 0) {
-		fprintf(stderr, "Erreur setgroups, errno = %d\n", errno);
+	if (setgroups(i - 1, gid_table) < 0) {
+		fprintf(stderr, "Error in setgroups(), errno = %d\n", errno);
 		return 1;
 	}
-	free(table_gid);
+	free(gid_table);
 
 	fprintf(stdout, "Verification : ");
 
-	if ((taille = getgroups(0, NULL)) < 0) {
-		fprintf(stderr, "Erreur getgroups, errno = %d\n", errno);
+	if ((size = getgroups(0, NULL)) < 0) {
+		fprintf(stderr, "Error in getgroups(), errno = %d\n", errno);
 		return 1;
 	}
 
-	if ((table_gid = calloc(taille, sizeof(gid_t))) == NULL) {
-		fprintf(stderr, "Erreur  calloc, errno = %d\n", errno);
+	if ((gid_table = calloc(size, sizeof(gid_t))) == NULL) {
+		fprintf(stderr, "Error in calloc(), errno = %d\n", errno);
 		return 1;
 	}
 
-	if (getgroups(taille, table_gid) < 0) {
-		fprintf(stderr, "Erreur getgroups, errno = %d\n", errno);
+	if (getgroups(size, gid_table) < 0) {
+		fprintf(stderr, "Erreur in getgroups(), errno = %d\n", errno);
 		return 1;
 	}
-	for (i = 0; i < taille; i ++)
-		fprintf(stdout, "%u ", table_gid[i]);
+	for (i = 0; i < size; i ++)
+		fprintf(stdout, "%u ", gid_table[i]);
 	fprintf(stdout, "\n");
 
-	free(table_gid);
+	free(gid_table);
+
 	return 0;
 }

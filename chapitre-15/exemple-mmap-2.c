@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-mmap-2.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <fcntl.h>
@@ -13,45 +13,41 @@
 #include <sys/stat.h>
 #include <sys/mman.h>
 
-int * entier;
+int *int_ptr;
 
-void gestionnaire_sigusr1 (int num)
+void signal_hander(int num)
 {
-	fprintf(stdout, "Fils : * entier = %d\n", * entier);
+	fprintf(stdout, "Child: *int_ptr = %d\n", *int_ptr);
 	fflush(stdout);
 }
 
 int main (void)
 {
-	char * nom_fichier;
-	int    fichier;
-	pid_t  pid;	
-	
-	if (signal(SIGUSR1, gestionnaire_sigusr1) == SIG_ERR) {
+	char   filename[7] = "XXXXXX";
+	int    fd;
+	pid_t  pid;
+
+	if (signal(SIGUSR1, signal_hander) == SIG_ERR) {
 		perror("signal");
 		exit(EXIT_FAILURE);
 	}
-	if ((nom_fichier = tmpnam(NULL)) == NULL) {
-		perror("tmpnam");
+	if ((fd = mkstemp(filename)) < 0) {
+		perror("mkstemp");
 		exit(EXIT_FAILURE);
 	}
-	if ((fichier = open(nom_fichier, O_RDWR | O_CREAT | O_TRUNC, 0644)) < 0) {
-		perror(nom_fichier);
-		exit(EXIT_FAILURE);
-	}
-	if (write(fichier, & fichier, sizeof (int)) != sizeof (int)) {
+	if (write(fd, &fd, sizeof (int)) != sizeof (int)) {
 		perror("write");
 		exit(EXIT_FAILURE);
 	}
-	entier = (int *) mmap(NULL, sizeof (int),
+	int_ptr = (int *) mmap(NULL, sizeof (int),
 	                      PROT_READ | PROT_WRITE, MAP_SHARED,
-	                      fichier, 0);
-	if (entier == (int *) MAP_FAILED) {
+	                      fd, 0);
+	if (int_ptr == (int *) MAP_FAILED) {
 		perror("mmap");
 		exit(EXIT_FAILURE);
 	}
-	close(fichier);
-	unlink(nom_fichier);
+	close(fd);
+	unlink(filename);
 
 	if ((pid = fork()) < 0) {
 		perror("fork");
@@ -61,13 +57,13 @@ int main (void)
 		while (1)
 			sleep(1);
 	} else {
-		for ((* entier) = 0; (* entier) < 10; (* entier) ++) {
-			fprintf(stdout, "Pere : * entier = %d\n", * entier);
+		for ((*int_ptr) = 0; (*int_ptr) < 10; (*int_ptr) ++) {
+			fprintf(stdout, "Parent: *int_ptr = %d\n", *int_ptr);
 			fflush(stdout);
 			kill(pid, SIGUSR1);
 			sleep(1);
 		}
-		/* Ne pas oublier de tuer le fils qui est en attente */
+		/* Ne pas oublier de tuer le processus enfant en attente */
 		kill(pid, SIGKILL);
 	}
 	return EXIT_SUCCESS;

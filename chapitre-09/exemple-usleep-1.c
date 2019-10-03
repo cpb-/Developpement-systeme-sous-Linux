@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-usleep-1.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -12,27 +12,27 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-void gestionnaire_sigusr1(int numero)
+void signal_handler(int numero)
 { /* ne rien faire */
 }
 
 int main (void)
 {
 	pid_t            pid;
-	time_t           heure;
+	time_t           t;
 
 	if ((pid = fork()) < 0) {
-		fprintf(stderr, "Erreur dans fork \n");
+		perror("fork ()");
 		exit(EXIT_FAILURE);
 	}
-	signal(SIGUSR1, gestionnaire_sigusr1);
+	signal(SIGUSR1, signal_handler);
 
 	if (pid == 0) {
-		time(& heure);
-		fprintf(stdout, "Avant : %s", ctime(& heure));
+		time(&t);
+		fprintf(stdout, "Before : %s", ctime(&t));
 		usleep(10000000); /* 10 millions de us = 10 secondes */
-		time(& heure);
-		fprintf(stdout, "Apres : %s", ctime(& heure));
+		time(&t);
+		fprintf(stdout, "After  : %s", ctime(&t));
 	} else {
 		usleep(2000000); /* 2 millions de us = 2 secondes */
 		kill(pid, SIGUSR1);

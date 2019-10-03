@@ -1,29 +1,29 @@
 // ------------------------------------------------------------------
 // exemple-strncat.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define LG_MAXI	32	/* 20 + 12, cf plus bas */
+#define MAX_LENGTH 31	/* 20 + 11, cf plus bas */
 
 int main (int argc, char * argv[])
 {
 	int	 i;
-	int	 taille;
-	char chaine[LG_MAXI + 1];
+	int	 size;
+	char string[MAX_LENGTH + 1];
 
-	strcpy(chaine, "Arguments : "); /* deja 12 caracteres */
+	strcpy(string, "Arguments: "); /* deja 11 caracteres */
 
 	for (i = 1; i < argc; i ++) {
-		taille = strlen(chaine);
-		strncat(chaine, argv[i], LG_MAXI - taille);
+		size = strlen(string);
+		strncat(string, argv[i], MAX_LENGTH - size);
 	}
-	fprintf(stdout, "%s\n", chaine);
+	fprintf(stdout, "%s\n", string);
 	return EXIT_SUCCESS;
 }
 

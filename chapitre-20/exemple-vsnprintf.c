@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-vsnprintf.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdarg.h>
@@ -10,47 +10,51 @@
 #include <stdlib.h>
 #include <string.h>
 
-char * alloc_printf (const char * format, ...);
+char * alloc_printf (const char *format, ...);
 
 int main (void)
 {
-	char *	chaine;
-	char *  seizecars = "0123456789ABCDEF";
-	chaine = alloc_printf(" %s %s",
-	                      seizecars, seizecars);
-	if (chaine != NULL) {
-		fprintf(stdout, "Chaine de %d caracteres\n%s\n",
-		                 strlen(chaine), chaine);
-		free(chaine);
+	char *string;
+	char *string_16 = "0123456789ABCDEF";
+
+	string = alloc_printf(" %s %s",
+	                      string_16, string_16);
+	if (string != NULL) {
+		fprintf(stdout, "Chaine de %lu caracteres\n%s\n",
+		                 strlen(string), string);
+		free(string);
 	}
-	chaine = alloc_printf(" %s  %s  %s  %s",
-	                      seizecars, seizecars, seizecars, seizecars);
-	if (chaine != NULL) {
-		fprintf(stdout, "Chaine de %d caracteres\n%s\n",
-		                 strlen(chaine), chaine);
-		free(chaine);
+	string = alloc_printf(" %s  %s  %s  %s",
+	                      string_16, string_16, string_16, string_16);
+	if (string != NULL) {
+		fprintf(stdout, "Chaine de %lu caracteres\n%s\n",
+		                 strlen(string), string);
+		free(string);
 	}
+
 	return EXIT_SUCCESS;
 }
 
 
-char * alloc_printf (const char * format, ...)
+char * alloc_printf (const char *format, ...)
 {
-	va_list	arguments;
-	char *	retour = NULL;
-	int	taille = 64;
-	int	nb_ecrits;
-	va_start(arguments, format);
+	va_list	args;
+	char *ret_string = NULL;
+	int	size = 64;
+	int	written;
+
 	while (1) {
-		retour = realloc(retour, taille);
-		if (retour == NULL)
+		va_start(args, format);
+		ret_string = realloc(ret_string, size);
+		if (ret_string == NULL)
 			break;
-		nb_ecrits = vsnprintf(retour, taille, format, arguments);
-		if ((nb_ecrits >= 0) && (nb_ecrits < taille))
+		written = vsnprintf(ret_string, size, format, args);
+		if ((written >= 0) && (written < size))
 			break;
-		taille = taille + 64;
+		size = size + 64;
+		va_end(args);
 	}
-	va_end(arguments);
-	return retour;
+
+	return ret_string;
 }
 

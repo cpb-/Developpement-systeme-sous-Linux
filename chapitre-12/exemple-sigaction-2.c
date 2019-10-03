@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-sigaction-2.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -14,16 +14,17 @@ int main (void)
 {
 	int i;
 	struct sigaction action;
+
 	for (i = 1; i < NSIG; i ++) {
-		if (sigaction(i, NULL, & action) != 0)
-			fprintf(stderr, "%d : Erreur\n", i);
+		if (sigaction(i, NULL, &action) != 0)
+			fprintf(stderr, "%d: Error\n", i);
 		if (action.sa_handler != SIG_DFL) {
-			fprintf(stdout, "%d (%s) : ",
+			fprintf(stdout, "%d (%s): ",
 				i, sys_siglist[i]);
 			if (action.sa_handler == SIG_IGN)
-				fprintf(stdout, "ignore\n");
+				fprintf(stdout, "ignored\n");
 			else
-				fprintf(stdout, "personnalise\n");
+				fprintf(stdout, "catched\n");
 		}
 	}
 	return EXIT_SUCCESS;

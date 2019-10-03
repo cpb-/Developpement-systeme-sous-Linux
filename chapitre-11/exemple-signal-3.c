@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-signal-3.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 #define	_XOPEN_SOURCE
 #include <stdio.h>
@@ -10,21 +10,22 @@
 #include <unistd.h>
 #include <signal.h>
 
-void gestionnaire (int numero)
+void signal_handler(int num)
 {
 	int i;
-	signal(numero, gestionnaire);
-	fprintf(stdout, "debut du gestionnaire de signal %d\n", numero);
+
+	signal(num, signal_handler);
+	fprintf(stdout, "start of signal handler %d\n", num);
 	for (i = 1; i < 4; i ++) {
 		fprintf(stdout, "%d\n", i);
 		sleep(1);
 	}
-	fprintf(stdout, "fin du gestionnaire de signal %d\n", numero); 
+	fprintf(stdout, "end of signal handler %d\n", num);
 }
 
 int main (void)
 {
-	signal(SIGUSR1, gestionnaire);
+	signal(SIGUSR1, signal_handler);
 	
 	if (fork() == 0) {
 		kill(getppid(), SIGUSR1);
@@ -34,6 +35,6 @@ int main (void)
 		while (1)
 			pause();
 	}
-	return EXIT_SUCCESS;	
+	return EXIT_SUCCESS;
 }
 

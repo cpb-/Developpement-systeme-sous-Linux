@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-is.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <ctype.h>
@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void affiche_caracteristiques (int c)
+void display_character (int c)
 {
 	fprintf(stdout, "%02X : ", (unsigned char) c);
 	if (isalnum(c))  fprintf(stdout, "alphanumerique ");
@@ -26,15 +26,18 @@ void affiche_caracteristiques (int c)
 	if (isspace(c))  fprintf(stdout, "espace ");
 	if (isupper(c))  fprintf(stdout, "majuscule ");
 	if (isxdigit(c)) fprintf(stdout, "hexadecimal ");
+
 	fprintf(stdout, "\n");
 }
 
 int main (void)
 {
-	int caractere;
+	int character;
+
 	setlocale(LC_ALL, "");
-	while ((caractere = getchar()) != EOF)
-		affiche_caracteristiques(caractere);
+	while ((character = getchar()) != EOF)
+		display_character(character);
+
 	return EXIT_SUCCESS;
 }
 

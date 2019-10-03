@@ -2,7 +2,7 @@ SHELL=/bin/sh
 
 CFLAGS = -Wall -g
 
-EXECUTABLES=	exemple-chroot		\
+EXECUTABLES=                            \
 		exemple-fchdir		\
 		exemple-fnmatch		\
 		exemple-glob		\

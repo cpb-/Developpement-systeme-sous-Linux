@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-epoll.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2016 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -10,11 +10,11 @@
 #include <unistd.h>
 #include <sys/epoll.h>
 
-#define	NB_FILS	10
+#define	CHILDS	10
 
 int main (void)
 {
-	int tube[NB_FILS][2];
+	int pipe_fd[CHILDS][2];
 	int i;
 	int n;
 	char c;
@@ -22,45 +22,45 @@ int main (void)
 	struct epoll_event evt;
 	struct epoll_event * revts = NULL;
 
-	for (i = 0; i < NB_FILS; i ++) {
-		if (pipe (tube[i]) < 0) {
+	for (i = 0; i < CHILDS; i ++) {
+		if (pipe (pipe_fd[i]) < 0) {
 			perror("pipe");
 			exit(EXIT_FAILURE);
 		}
 		if (fork() == 0) {
-			// Fils
-			close(tube[i][0]);
+			// Enfant
+			close(pipe_fd[i][0]);
 			c = '0' + i;
 			while(1) {
 				sleep(i + 1);
-				write(tube[i][1], & c, 1);
+				write(pipe_fd[i][1], & c, 1);
 			}
 		}
-		close(tube[i][1]);
+		close(pipe_fd[i][1]);
 	}
 
-	// Père
+	// Parent
 	while (1) {
-		efd = epoll_create(NB_FILS);
+		efd = epoll_create(CHILDS);
 		if (efd < 0) {
 			perror("epoll_create");
 			exit(EXIT_FAILURE);
 		}
 		
-		for (i = 0; i < NB_FILS; i ++) {
+		for (i = 0; i < CHILDS; i ++) {
 			evt.events = EPOLLIN;
-			evt.data.fd = tube[i][0];
+			evt.data.fd = pipe_fd[i][0];
 			if (epoll_ctl(efd, EPOLL_CTL_ADD, evt.data.fd, & evt) != 0) {
 				perror("epoll_ctl");
 				exit(EXIT_FAILURE);
 			}
 		}
-		revts = calloc(NB_FILS, sizeof(struct epoll_event));
+		revts = calloc(CHILDS, sizeof(struct epoll_event));
 		if (revts == NULL) {
 			perror("calloc");
 			exit(EXIT_FAILURE);
 		}
-		n = epoll_wait(efd, revts, NB_FILS, -1);
+		n = epoll_wait(efd, revts, CHILDS, -1);
 		if (n < 0)
 			break;
 		for (i = 0; i < n; i ++) {

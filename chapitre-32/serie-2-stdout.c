@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // serie-2-stdout.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <fcntl.h>
@@ -14,68 +14,67 @@
 
 #define LG_BUFFER    1024
 
-void setspeed (struct termios * config, speed_t vitesse)
+void setspeed(struct termios * config, speed_t speed)
 {
-	cfsetispeed(config, vitesse);
-	cfsetospeed(config, vitesse);
+	cfsetispeed(config, speed);
+	cfsetospeed(config, speed);
 }
+
 
 int main (int argc, char * argv [])
 {
-	char *  nom_tty           = "/dev/ttyS0";
-	int	vitesse           = 9600;
-	int	type_parite       = 'n';
-	int	nb_bits_donnees   = 8;
-	int	nb_bits_arret     = 1;
-	int	fd_tty            = -1;
-	struct termios configuration;
-	struct termios sauvegarde;
-
+	char * tty_name  = "/dev/ttyS0";
+	int	speed  = 9600;
+	int	parity = 'n';
+	int	data_bits  = 8;
+	int	stop_bits  = 1;
+	int	tty_fd  = -1;
+	struct termios config_termios;
+	struct termios saved_termios;
 	char    buffer[LG_BUFFER];
-	int     nb_lus;
-
+	int     bytes;
 	int     option;
 	
 	opterr = 0;
 	while ((option = getopt(argc, argv, "hv:p:d:a:t:")) != -1) {
 		switch (option) {
 			case 'v' :
-				if ((sscanf(optarg, "%d", & vitesse) != 1)
-				 || (vitesse < 50) || (vitesse > 115200)) {
+				if ((sscanf(optarg, "%d", &speed) != 1)
+				 || (speed < 50) || (speed > 115200)) {
 					fprintf(stderr, "Vitesse %s invalide \n", optarg);
 					exit(EXIT_FAILURE);
 				}
 				break;
 			case 'p' :
-				type_parite = optarg[0];
-				if ((type_parite != 'n') && (type_parite != 'p')
-				 && (type_parite != 'i')) {
-					fprintf(stderr, "Parite %c invalide \n", type_parite);
+				parity = optarg[0];
+				if ((parity != 'n') && (parity != 'p')
+				 && (parity != 'i')) {
+					fprintf(stderr, "Parite %c invalide \n", parity);
 					exit(EXIT_FAILURE);
 				}
 				break;
 			case 'd' :
-				if ((sscanf(optarg, "%d", & nb_bits_donnees) != 1)
-				 || (nb_bits_donnees < 5) || (nb_bits_donnees > 8)) {
-					fprintf(stderr, "Nb bits donnees %d invalide \n", nb_bits_donnees);
+				if ((sscanf(optarg, "%d", &data_bits) != 1)
+				 || (data_bits < 5) || (data_bits > 8)) {
+					fprintf(stderr, "Nb bits donnees %d invalide \n", data_bits);
 					exit(EXIT_FAILURE);
 				}
 				break;
 			case 'a' :	
-				if ((sscanf(optarg, "%d", & nb_bits_arret) != 1)
-				 || (nb_bits_arret < 1) || (nb_bits_arret > 2)) {
+				if ((sscanf(optarg, "%d", &stop_bits) != 1)
+				 || (stop_bits < 1) || (stop_bits > 2)) {
 					fprintf(stderr, "Nb bits arret %d invalide \n",
-							nb_bits_arret);
+							stop_bits);
 					exit(EXIT_FAILURE);
 				}
 				break;
 			case 't' :
-				nom_tty = optarg;
+				tty_name = optarg;
 				break;
 			case 'h' :
 				fprintf(stderr, "Syntaxe %s [options]... \n", argv[0]);
 				fprintf(stderr, "  Options : \n");
-				fprintf(stderr, "     -v <vitesse en bits/seconde>  \n");
+				fprintf(stderr, "     -v <speed en bits/seconde>  \n");
 				fprintf(stderr, "     -p <parite> (n)ulle (p)aire (i)mpaire \n");
 				fprintf(stderr, "     -d <bits de donnees> (5 a 8) \n");
 				fprintf(stderr, "     -a <bits d'arret> (1 ou 2) \n");
@@ -87,95 +86,95 @@ int main (int argc, char * argv [])
 		}
 	}
 	// Ouverture non-bloquante pour basculer en mode non-local
-	fd_tty = open(nom_tty, O_RDWR | O_NONBLOCK);
-	if (fd_tty < 0) {
-		perror(nom_tty);
+	tty_fd = open(tty_name, O_RDWR | O_NONBLOCK);
+	if (tty_fd < 0) {
+		perror(tty_name);
 		exit(EXIT_FAILURE);
 	}
-	if (tcgetattr(fd_tty, & configuration) != 0) {
+	if (tcgetattr(tty_fd, &config_termios) != 0) {
 		perror("tcgetattr");
 		exit(EXIT_FAILURE);
 	}
-	configuration.c_cflag	&= ~ CLOCAL;
-	tcsetattr(fd_tty, TCSANOW, & configuration);
+	config_termios.c_cflag	&= ~ CLOCAL;
+	tcsetattr(tty_fd, TCSANOW, &config_termios);
 
 	// Maintenant passage en mode bloquant
-	fcntl(fd_tty, F_SETFL, fcntl(fd_tty, F_GETFL) &  ~O_NONBLOCK);
+	fcntl(tty_fd, F_SETFL, fcntl(tty_fd, F_GETFL) & ~O_NONBLOCK);
 	fprintf(stderr, "Port serie ouvert \n");
-	tcgetattr(fd_tty, & configuration);
-	memcpy(& sauvegarde, & configuration, sizeof(struct termios));
-	cfmakeraw(& configuration);
-	if (vitesse < 50)
-		setspeed(& configuration, B50);
-	else if (vitesse < 75)
-		setspeed(& configuration, B75);
-	else if (vitesse < 110)
-		setspeed(& configuration, B110);
-	else if (vitesse < 134)
-		setspeed(& configuration, B134);
-	else if (vitesse < 150)
-		setspeed(& configuration, B150);
-	else if (vitesse < 200)
-		setspeed(& configuration, B200);
-	else if (vitesse < 300)
-		setspeed(& configuration, B300);
-	else if (vitesse < 600)
-		setspeed(& configuration, B600);
-	else if (vitesse < 1200)
-		setspeed(& configuration, B1200);
-	else if (vitesse < 1800)
-		setspeed(& configuration, B1800);
-	else if (vitesse < 2400)
-		setspeed(& configuration, B2400);
-	else if (vitesse < 4800)
-		setspeed(& configuration, B4800);
-	else if (vitesse < 9600)
-		setspeed(& configuration, B9600);
-	else if (vitesse < 19200)
-		setspeed(& configuration, B19200);
-	else if (vitesse < 34000)
-		setspeed(& configuration, B38400);
-	else if (vitesse < 57600)
-		setspeed(& configuration, B57600);
+	tcgetattr(tty_fd, &config_termios);
+	memcpy(&saved_termios, &config_termios, sizeof(struct termios));
+	cfmakeraw(&config_termios);
+	if (speed < 50)
+		setspeed(&config_termios, B50);
+	else if (speed < 75)
+		setspeed(&config_termios, B75);
+	else if (speed < 110)
+		setspeed(&config_termios, B110);
+	else if (speed < 134)
+		setspeed(&config_termios, B134);
+	else if (speed < 150)
+		setspeed(&config_termios, B150);
+	else if (speed < 200)
+		setspeed(&config_termios, B200);
+	else if (speed < 300)
+		setspeed(&config_termios, B300);
+	else if (speed < 600)
+		setspeed(&config_termios, B600);
+	else if (speed < 1200)
+		setspeed(&config_termios, B1200);
+	else if (speed < 1800)
+		setspeed(&config_termios, B1800);
+	else if (speed < 2400)
+		setspeed(&config_termios, B2400);
+	else if (speed < 4800)
+		setspeed(&config_termios, B4800);
+	else if (speed < 9600)
+		setspeed(&config_termios, B9600);
+	else if (speed < 19200)
+		setspeed(&config_termios, B19200);
+	else if (speed < 34000)
+		setspeed(&config_termios, B38400);
+	else if (speed < 57600)
+		setspeed(&config_termios, B57600);
 	else
-		setspeed(& configuration, B115200);
-	switch (type_parite) {
+		setspeed(&config_termios, B115200);
+	switch (parity) {
 		case 'n' :
-			configuration.c_cflag &= ~ PARENB;
+			config_termios.c_cflag &= ~ PARENB;
 			break;
 		case 'p' :
-			configuration.c_cflag |=   PARENB;
-			configuration.c_cflag &= ~ PARODD;
+			config_termios.c_cflag |=   PARENB;
+			config_termios.c_cflag &= ~ PARODD;
 			break;
 		case 'i':
-			configuration.c_cflag |=   PARENB;
-			configuration.c_cflag |=   PARODD;
+			config_termios.c_cflag |=   PARENB;
+			config_termios.c_cflag |=   PARODD;
 			break;
 	}
-	configuration.c_cflag &= ~ CSIZE;
-	if (nb_bits_donnees == 5)
-		configuration.c_cflag |= CS5;
-	else if (nb_bits_donnees == 6)
-		configuration.c_cflag |= CS6;
-	else if (nb_bits_donnees == 7)
-		configuration.c_cflag |= CS7;
-	else if (nb_bits_donnees == 8)
-		configuration.c_cflag |= CS8;
-	if (nb_bits_arret == 1)
-		configuration.c_cflag &= ~ CSTOPB;
+	config_termios.c_cflag &= ~ CSIZE;
+	if (data_bits == 5)
+		config_termios.c_cflag |= CS5;
+	else if (data_bits == 6)
+		config_termios.c_cflag |= CS6;
+	else if (data_bits == 7)
+		config_termios.c_cflag |= CS7;
+	else if (data_bits == 8)
+		config_termios.c_cflag |= CS8;
+	if (stop_bits == 1)
+		config_termios.c_cflag &= ~ CSTOPB;
 	else
-		configuration.c_cflag |=   CSTOPB;
+		config_termios.c_cflag |=   CSTOPB;
 
 	// Controle de flux CTS/RTS specifique Linux
-	configuration.c_cflag |=   CRTSCTS;
+	config_termios.c_cflag |=   CRTSCTS;
 
-	configuration.c_cc[VMIN]  = 0;
-	configuration.c_cc[VTIME] = 50;
+	config_termios.c_cc[VMIN]  = 0;
+	config_termios.c_cc[VTIME] = 50;
 	
-	configuration.c_cflag &= ~ CLOCAL;
-	configuration.c_cflag |=   HUPCL;
+	config_termios.c_cflag &= ~ CLOCAL;
+	config_termios.c_cflag |=   HUPCL;
 
-	if (tcsetattr(fd_tty, TCSANOW, & configuration) < 0) {
+	if (tcsetattr(tty_fd, TCSANOW, &config_termios) < 0) {
 		perror("tcsetattr");
 		exit(EXIT_FAILURE);
 	}
@@ -183,21 +182,22 @@ int main (int argc, char * argv [])
 
 	fprintf(stderr, "Debut de la reception des donnees \n");
 	while (1) {
-		nb_lus = read(fd_tty, buffer, LG_BUFFER);
-		if (nb_lus < 0)  {
+		bytes = read(tty_fd, buffer, LG_BUFFER);
+		if (bytes < 0)  {
 			perror("read");
 			exit(EXIT_FAILURE);
 		}
-		if (nb_lus == 0)
+		if (bytes == 0)
 			break;
-		write(STDOUT_FILENO, buffer, nb_lus);
+		write(STDOUT_FILENO, buffer, bytes);
 	}
 	fprintf(stderr, "Fin de la reception des donnees \n");
-	close(fd_tty);
-	// restauration de la configuration originale
-	fd_tty = open(nom_tty, O_RDWR | O_NONBLOCK);
-	sauvegarde.c_cflag |= CLOCAL;
-	tcsetattr(fd_tty, TCSANOW, & sauvegarde);
-	close(fd_tty);
+	close(tty_fd);
+	// restauration de la config_termios originale
+	tty_fd = open(tty_name, O_RDWR | O_NONBLOCK);
+	saved_termios.c_cflag |= CLOCAL;
+	tcsetattr(tty_fd, TCSANOW, &saved_termios);
+	close(tty_fd);
+
 	return EXIT_SUCCESS;
 }

@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-setlocale.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <locale.h>
@@ -19,6 +19,7 @@ int main (void)
 	fprintf(stdout, "LC_NUMERIC  = %s \n", setlocale(LC_NUMERIC,  NULL));
 	fprintf(stdout, "LC_TIME     = %s \n", setlocale(LC_TIME,     NULL));
 	fprintf(stdout, "LC_ALL      = %s \n", setlocale(LC_ALL,      NULL));
+
 	return EXIT_SUCCESS;
 }
 

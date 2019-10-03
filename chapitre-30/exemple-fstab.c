@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-fstab.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -11,7 +11,7 @@
 
 int main (void)
 {
-	struct fstab * fstab;
+	struct fstab *fstab;
 
 	while (1) {
 		if ((fstab = getfsent()) == NULL)
@@ -24,6 +24,7 @@ int main (void)
 				 fstab->fs_type, fstab->fs_freq,
 				 fstab->fs_passno);
 	}
+
 	return EXIT_SUCCESS;
 }	
 		

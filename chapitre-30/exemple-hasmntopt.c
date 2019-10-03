@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-hasmntopt.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -11,14 +11,14 @@
 
 int main (void)
 {
-	FILE * fichier;
-	struct mntent * mntent;
+	FILE *fp;
+	struct mntent *mntent;
 
-	fichier = setmntent("/etc/fstab", "r");
-	if (fichier == NULL)
+	fp = setmntent("/etc/fstab", "r");
+	if (fp == NULL)
 		exit(EXIT_FAILURE);
 	while (1) {
-		mntent = getmntent(fichier);
+		mntent = getmntent(fp);
 		if (mntent == NULL)
 			break;
 		if (hasmntopt(mntent, "mand") != NULL)
@@ -26,6 +26,7 @@ int main (void)
 				mntent->mnt_fsname,
 				mntent->mnt_dir);
 	}
-	endmntent(fichier);
+	endmntent(fp);
+
 	return EXIT_SUCCESS;
 }

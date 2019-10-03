@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // verifie-descripteurs.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <fcntl.h>
@@ -30,5 +30,6 @@ int main (int argc, char * argv[])
 		}
 		fprintf (stdout, "Ok (taille = %ld)\n", status.st_size);
 	}
+
 	return 0;
 }

@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-setuid.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -11,20 +11,20 @@
 
 int main (void)
 {
-	uid_t  uid_reel;
-	uid_t  uid_eff;
+	uid_t  r_uid;
+	uid_t  e_uid;
 
-	uid_reel = getuid();
-	uid_eff  = geteuid();
-	fprintf(stdout, " UID-R = %u,  UID-E = %u\n",
+	r_uid = getuid();
+	e_uid = geteuid();
+	fprintf(stdout, " R-UID = %u,  E-UID = %u\n",
 	        getuid(), geteuid());
 	fprintf(stdout, " setuid(%d) = %d\n",
-	        uid_reel, setuid(uid_reel));
-	fprintf(stdout, " UID-R = %u,  UID-E = %u\n",
+	        r_uid, setuid(r_uid));
+	fprintf(stdout, " R-UID = %u,  E-UID = %u\n",
 	        getuid(), geteuid());
 	fprintf(stdout, " setuid(%d) = %d\n",
-	        uid_eff, setuid(uid_eff));
-	fprintf(stdout, " UID-R = %u,  UID-E = %u\n",
+	        e_uid, setuid(e_uid));
+	fprintf(stdout, " R-UID = %u,  E-UID = %u\n",
 	        getuid(), geteuid());
 	return 0;
 }

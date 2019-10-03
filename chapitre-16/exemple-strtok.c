@@ -1,34 +1,34 @@
 // ------------------------------------------------------------------
 // exemple-strtok.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define LG_MAXI	256
+#define MAX_LENGTH 256
 
 int main (void)
 {
-	char	* ligne;
-	char	* champs;
+	char	*line;
+	char	*field;
 	int	n, c;
 
-	if ((ligne = malloc(LG_MAXI)) == NULL) {
+	if ((line = malloc(MAX_LENGTH)) == NULL) {
 		perror("malloc");
 		exit(EXIT_FAILURE);
 	}
 	n = 1;
-	while (fgets(ligne, LG_MAXI, stdin) != NULL) {
-		fprintf(stdout, "Ligne %d\n", n);
+	while (fgets(line, MAX_LENGTH, stdin) != NULL) {
+		fprintf(stdout, "Line %d\n", n);
 		c = 1;
-		champs = strtok(ligne, " \t");
-		while (champs != NULL) { 
-			fprintf(stdout, "  champs %d : %s\n", c, champs);
-			champs = strtok(NULL, " \t");
+		field = strtok(line, " \t");
+		while (field != NULL) { 
+			fprintf(stdout, "  field %d : %s\n", c, field);
+			field = strtok(NULL, " \t");
 			c ++;
 		}
 		n ++;

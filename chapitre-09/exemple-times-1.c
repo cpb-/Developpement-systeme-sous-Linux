@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-times-1.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -11,23 +11,25 @@
 #include <unistd.h>
 #include <sys/times.h>
 
-void    action_a_mesurer        (void);
+void function_to_profile(void);
     
 int main (void)
 {
-	clock_t debut_programme;
-	double  duree_ecoulee;
-	debut_programme = times (NULL);
-	fprintf(stdout, "Jiffies au debut %ld \n", debut_programme);
-	action_a_mesurer();
-	fprintf(stdout, "Jiffies en fin %ld \n", times (NULL));
-	duree_ecoulee = (double) (times(NULL) - debut_programme);
-	duree_ecoulee = duree_ecoulee / sysconf(_SC_CLK_TCK);
-	fprintf(stdout, "Duree = %f \n", duree_ecoulee);
+	clock_t before, after;
+	double  duration;
+
+	before = times (NULL);
+	function_to_profile();
+	after = times(NULL);
+	fprintf(stdout, "Jiffies before function %ld \n", before);
+	fprintf(stdout, "Jiffies after function %ld \n", after);
+	duration = (double) (after - before);
+	duration = duration / sysconf(_SC_CLK_TCK);
+	fprintf(stdout, "Duration = %f \n", duration);
 	return EXIT_SUCCESS;
 }
 
-void action_a_mesurer (void)
+void function_to_profile(void)
 {
 	int i, j;
 	FILE * fp1, * fp2;

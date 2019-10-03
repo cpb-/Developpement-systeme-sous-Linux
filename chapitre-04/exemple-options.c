@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-options.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -10,73 +10,69 @@
 #include <string.h>
 #include <unistd.h>
 
-#ifdef OPTIONS_LONGUES
+#ifdef LONG_OPTIONS
 
 #include <getopt.h>
 
 #endif
 
 // ------------------------------------------------------------------
-//    Definition des valeurs par defaut (eventuellement dans un .h)  
-// ------------------------------------------------------------------
- 
-
-#define ADRESSE_SERVEUR_DEFAUT	"localhost"
-#define PORT_SERVEUR_DEFAUT	"4000"
-#define CONNEXION_AUTO_DEFAUT	0
-#define DELAI_CONNEXION_DEFAUT	4
-
-
-// ------------------------------------------------------------------
-//     Déclarations des routines de la suite de l'application        
+//    Definition des valeurs par defaut (eventuellement dans un .h)
 // ------------------------------------------------------------------
 
-
-void	sous_options 	  (char * ssopt, int * cnx_auto, int * delai);
-
-void	suite_application (char * adresse_serveur,
-			   char * port_serveur,
-			   int    connexion_auto,
-			   int    delai_reconnexion,
-			   int	  argc,
-			   char * argv []);
-
-void	affiche_aide	  (char * nom_programme);
-
+#define DEFAULT_SERVER_ADDRESS    "localhost"
+#define DEFAULT_SERVER_PORT       "4000"
+#define DEFAULT_AUTO_CONNECT      0
+#define DEFAULT_CONNECT_DELAY     4
 
 
 // ------------------------------------------------------------------
-//                    Debut du programme                            
+//     Declaration des routines privees de l'application
+// ------------------------------------------------------------------
+
+void parse_sub_options(char *ssopt,
+               int *auto_connect, int *delay);
+
+void run_server(char *server_address,
+                char *server_port,
+                int   auto_connect,
+                int   connect_delay,
+                int   argc,
+                char *argv []);
+
+void display_help(char *program_name);
+
+
+
+// ------------------------------------------------------------------
+//                    Debut du programme principal
 // ------------------------------------------------------------------
 
 
-
-
-int main (int argc, char * argv [])
+int main (int argc, char *argv[])
 {
 
-	/* 
+	/*
 	 * Copie des chaines d'environnement.
 	 * Il n'est pas indispensable sous Linux d'en faire une
 	 * copie, mais c'est une bonne habitude pour assurer la
 	 * portabilite du programme.
 	 */
-
-	char * opt_adr   = NULL;
-	char * opt_srv   = NULL;
-	int    opt_delai = 0;
-	char * retour_getenv;
+	char *opt_addr  = NULL;
+	char *opt_port  = NULL;
+	int   opt_delay = 0;
+	char *content;
 
 	/*
 	 * Variables contenant les valeurs effectives de nos parametres.
 	 */
 
-	static char * 	adresse_serveur = ADRESSE_SERVEUR_DEFAUT;
-	static char * 	port_serveur    = PORT_SERVEUR_DEFAUT;
-	int		connexion_auto  = CONNEXION_AUTO_DEFAUT;
-	int		delai_connexion = DELAI_CONNEXION_DEFAUT;
+	static char *server_address = DEFAULT_SERVER_ADDRESS;
+	static char *server_port    = DEFAULT_SERVER_PORT;
+	int auto_connect   = DEFAULT_AUTO_CONNECT;
+	int connect_delay  = DEFAULT_CONNECT_DELAY;
 
-	int	option;	
+	int	option;
 
 
 	/*
@@ -84,42 +80,41 @@ int main (int argc, char * argv [])
 	 * le nom des variables, mais on pourrait aussi les regrouper
 	 * (par #define) en tete de fichier.
 	 */
-	
-	
-	retour_getenv = getenv("OPT_ADR");
-	if ((retour_getenv != NULL) && (strlen(retour_getenv) != 0)) {
-		opt_adr = malloc(strlen(retour_getenv) + 1);
-		if (opt_adr != NULL) {
-			strcpy(opt_adr, retour_getenv);
-			adresse_serveur = opt_adr;
+
+	content = getenv("OPT_ADDR");
+	if ((content != NULL) && (strlen(content) != 0)) {
+		opt_addr = malloc(strlen(content) + 1);
+		if (opt_addr != NULL) {
+			strcpy(opt_addr, content);
+			server_address = opt_addr;
 		} else {
 			perror("malloc");
 			exit(1);
 		}
 	}
 
-	retour_getenv = getenv("OPT_SRV");
-	if ((retour_getenv != NULL) && (strlen(retour_getenv) != 0)) {
-		opt_srv = malloc(strlen(retour_getenv) + 1);
-		if (opt_srv != NULL) {
-			strcpy(opt_srv, retour_getenv);
-			port_serveur = opt_srv;
+	content = getenv("OPT_PORT");
+	if ((content != NULL) && (strlen(content) != 0)) {
+		opt_port = malloc(strlen(content) + 1);
+		if (opt_port != NULL) {
+			strcpy(opt_port, content);
+			server_port = opt_port;
 		} else {
 			perror("malloc");
 			exit(1);
 		}
 	}
 
-	retour_getenv = getenv("OPT_AUTO");
+	content = getenv("OPT_AUTO");
 	/* Il suffit que la variable existe dans l'environnement, sa  */
-	/* valeur ne nous importe pas.                                */ 
-	if (retour_getenv != NULL)
-		connexion_auto = 1;
+	/* valeur ne nous importe pas.                                */
+	if (content != NULL)
+		auto_connect = 1;
 
-	retour_getenv = getenv("OPT_DELAI");
-	if (retour_getenv != NULL)
-		if (sscanf(retour_getenv, "%d", & opt_delai) == 1)
-			delai_connexion = opt_delai;
+	content = getenv("OPT_DELAY");
+	if (content != NULL)
+		if (sscanf(content, "%d", &opt_delay) == 1)
+			connect_delay = opt_delay;
 
 	/*
 	 * On va passer maintenant a la lecture des options en ligne
@@ -130,17 +125,17 @@ int main (int argc, char * argv [])
 
 	while (1) {
 
-	#ifdef OPTIONS_LONGUES
+	#ifdef LONG_OPTIONS
 		int	index = 0;
 		static struct option longopts[] = {
-			{ "adresse",  1,  NULL, 'a' },
+			{ "address",  1,  NULL, 'a' },
 			{ "port",     1,  NULL, 'p' },
 			{ "option",   1,  NULL, 'o' },
 			{ "help",     0,  NULL, 'h' },
 			{ NULL,       0,  NULL,  0  }
 		};
 
-		option = getopt_long(argc, argv, "a:p:o:h", longopts, & index);
+		option = getopt_long(argc, argv, "a:p:o:h", longopts, &index);
 	#else
 		option = getopt(argc, argv, "a:p:o:h");
 	#endif
@@ -152,29 +147,29 @@ int main (int argc, char * argv [])
 
 			case 'a' :
 				/* On libere une eventuelle copie de chaîne */
-				/* d'environnement equivalente.             */	
-				if (opt_adr != NULL)
-					free(opt_adr);
-				opt_adr = NULL;
-				adresse_serveur = optarg;
+				/* d'environnement equivalente.             */
+				if (opt_addr != NULL)
+					free(opt_addr);
+				opt_addr = NULL;
+				server_address = optarg;
 				break;
 
 			case 'p' :
 				/* idem */
-				if (opt_srv != NULL)
-					free(opt_srv);
-				opt_srv = NULL;
-				port_serveur = optarg;
+				if (opt_port != NULL)
+					free(opt_port);
+				opt_port = NULL;
+				server_port = optarg;
 				break;
 
 			case 'o' :
 				/* on va analyser les sous-options */
-				sous_options(optarg, 
-						& connexion_auto, 
-						& delai_connexion);
+				parse_sub_options(optarg, 
+						& auto_connect, 
+						& connect_delay);
 				break;
 			case 'h' :
-				affiche_aide(argv[0]);
+				display_help(argv[0]);
 				exit(0);
 				break;
 			default :
@@ -182,63 +177,65 @@ int main (int argc, char * argv [])
 		}
 	}
 
-	suite_application(adresse_serveur, port_serveur, 
-                           connexion_auto, delai_connexion,
-			   argc - optind, & (argv[optind])); 
+	run_server(server_address, server_port,
+	           auto_connect, connect_delay,
+			   argc - optind, &(argv[optind]));
 	return 0;
 }
 
-void sous_options (char * ssopt, int * cnx_auto, int * delai)
-{
-	int	subopt;
-	char	* chaine = ssopt;
-	char	* value = NULL;
-	int	val_delai;
 
-	char * tokens[] = {
-		"auto", "nonauto", "delai", NULL
+
+void parse_sub_options(char *ssopt, int *auto_connect, int *delay)
+{
+	int   subopt;
+	char *string = ssopt;
+	char *value = NULL;
+	int   delay_value;
+
+	char *tokens[] = {
+		"auto", "nonauto", "delay", NULL
 	};
-	while ((subopt = getsubopt(& chaine, tokens, & value)) != -1) {
+	while ((subopt = getsubopt(&string, tokens, &value)) != -1) {
 		switch (subopt) {
 			case 0 : /* auto */
-				* cnx_auto = 1;
+				*auto_connect = 1;
 				break;
-			case 1 : /* nonauto */	
-				* cnx_auto = 0;
+			case 1 : /* nonauto */
+				*auto_connect = 0;
 				break;
-			case 2 : /* delai=... */
+			case 2 : /* delay=... */
 				if (value == NULL) {
-					fprintf(stderr, "delai attendu\n");
+					fprintf(stderr, "expecting delay value\n");
 					break;
 				}
-				if (sscanf(value, "%d", & val_delai) != 1) {
-					fprintf(stderr, "delai invalide\n");
+				if (sscanf(value, "%d", &delay_value) != 1) {
+					fprintf(stderr, "invalid delay value\n");
 					break;
 				}
-				* delai = val_delai;
+				*delay = delay_value;
 				break;
 		}
 	}
 }
 
-	/*
-	 * La suite de l'application ne fait qu'afficher
-	 * les options et les arguments supplementaires
-	 */
 
+/*
+ * La suite de l'application ne fait qu'afficher
+ * les options et les arguments supplementaires
+ */
 
-void suite_application (char * adr_serveur,
-                        char * port_serveur,
-                        int    cnx_auto,
-                        int    delai_cnx,
-                        int	  argc,
-                        char * argv[])
+void run_server (char *server_address,
+                 char *server_port,
+                 int auto_connect,
+                 int connect_delay,
+                 int argc,
+                 char *argv[])
 {
 	int	i;
 
-	fprintf(stdout, "Serveur : %s - %s\n", adr_serveur, port_serveur);
-	fprintf(stdout, "Connexion auto : %s\n", cnx_auto ? "oui":"non");
-	fprintf(stdout, "Delai : %d\n", delai_cnx);
+	fprintf(stdout, "Serveur : %s - %s\n", server_address, server_port);
+	fprintf(stdout, "Connexion auto : %s\n", auto_connect ? "oui":"non");
+	fprintf(stdout, "Delai : %d\n", connect_delay);
 	fprintf(stdout, "Arguments supplementaires : ");
 	for (i = 0; i < argc; i++)
 		fprintf(stdout, "%s - ", argv[i]);
@@ -247,28 +244,29 @@ void suite_application (char * adr_serveur,
 
 
 
-void affiche_aide (char * nom_prog)
+void display_help (char *program_name)
 {
 
-	fprintf(stderr, "Syntaxe : %s [options] [fichiers...]\n", nom_prog);
+	fprintf(stderr, "Usage: %s [options] [files...]\n", program_name);
 	fprintf(stderr, "Options :\n");
-#ifdef OPTIONS_LONGUES
+#ifdef LONG_OPTIONS
 	fprintf(stderr, "  --help\n");
 #endif
-	fprintf(stderr, "  -h               Cet ecran d'aide\n");
-#ifdef OPTIONS_LONGUES
-	fprintf(stderr, "  --adresse <serveur>\n");
+	fprintf(stderr, "  -h               This help screen\n");
+#ifdef LONG_OPTIONS
+	fprintf(stderr, "  --address <server>\n");
 #endif
-	fprintf(stderr, "  -a <serveur>     Adresse IP du serveur\n");
-#ifdef OPTIONS_LONGUES
-	fprintf(stderr, "  --port <numero_port>\n");
+	fprintf(stderr, "  -a <server>      Server IP address\n");
+#ifdef LONG_OPTIONS
+	fprintf(stderr, "  --port <num>\n");
 #endif
-	fprintf(stderr, "  -p <num_port>    Numero de port TCP a contacter\n");
-#ifdef OPTIONS_LONGUES
-	fprintf(stderr, "  --option [sous_options]\n");
+	fprintf(stderr, "  -p <num>         Server TCP port number\n");
+#ifdef LONG_OPTIONS
+	fprintf(stderr, "  --option [sub_options]\n");
 #endif
-	fprintf(stderr, "  -o [sous_options]     \n");
-	fprintf(stderr, "Sous-options :\n");
-	fprintf(stderr, "  auto / nonauto   Connexion automatique ou non\n");
-	fprintf(stderr, "  delai=<sec>      Delai entre deux connexions\n");
+	fprintf(stderr, "  -o [sub_options]      \n");
+	fprintf(stderr, "Sub-options :\n");
+	fprintf(stderr, "  auto / nonauto   Automatic connection\n");
+	fprintf(stderr, "  delay=<sec>      Delay before reconnecting\n");
 }
+

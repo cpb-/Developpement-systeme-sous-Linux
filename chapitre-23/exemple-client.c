@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-client.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <fcntl.h>
@@ -16,16 +16,16 @@
 int main (void)
 {
 	FILE * question;
-	FILE * reponse;
+	FILE * answer;
 	int    fd;
-	char   nom_fifo[128];
-	char   chaine[128];
+	char   fifo_name[128];
+	char   string[128];
 
 	fprintf(stdout, "Chaine a traiter : ");
-	if (fgets(chaine, 128, stdin) == NULL)
+	if (fgets(string, 128, stdin) == NULL)
 		exit(EXIT_SUCCESS);
-	sprintf(nom_fifo, "anagramme.%ld", (long)getpid());
-	if (mkfifo(nom_fifo, 0644) != 0) {
+	sprintf(fifo_name, "anagramme.%ld", (long)getpid());
+	if (mkfifo(fifo_name, 0644) != 0) {
 		fprintf(stderr, "Impossible de creer la fifo\n");
 		exit(EXIT_FAILURE);
 	}
@@ -35,18 +35,19 @@ int main (void)
 		exit(EXIT_FAILURE);
 	}
 	question = fdopen(fd, "w");
-	fprintf(question, "%s\n%s", nom_fifo, chaine);
+	fprintf(question, "%s\n%s", fifo_name, string);
 	fclose(question);
 
-	fd = open(nom_fifo, O_RDONLY);
-	reponse = fdopen(fd, "r");
+	fd = open(fifo_name, O_RDONLY);
+	answer = fdopen(fd, "r");
 
-	if (fgets(chaine, 128, reponse) != NULL)
-		fprintf(stdout, "Reponse = %s\n", chaine);
+	if (fgets(string, 128, answer) != NULL)
+		fprintf(stdout, "Reponse = %s\n", string);
 	else
 		perror("fgets");
-	fclose(reponse);
-	unlink(nom_fifo);
+	fclose(answer);
+	unlink(fifo_name);
+
 	return EXIT_SUCCESS;
 }
 

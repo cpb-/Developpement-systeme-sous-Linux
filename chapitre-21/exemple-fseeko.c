@@ -1,11 +1,12 @@
 // ------------------------------------------------------------------
 // exemple-fseeko.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 // #define _FILE_OFFSET_BITS 64
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -13,11 +14,11 @@ int main (int argc, char * argv[])
 {
 	int    i;
 	FILE * fp;
-	int    caractere;
-	int    echange;
+	int    character;
+	int    swap;
 
-	off_t  debut;
-	off_t  fin;
+	off_t  start;
+	off_t  end;
 
 	if (argc < 2) {
 		fprintf(stderr, "syntaxe : %s fichier...\n", argv[0]);
@@ -33,23 +34,23 @@ int main (int argc, char * argv[])
 			fclose(fp);
 			continue;
 		}
-		fin = ftello(fp) - 1;
-		debut = 0;
-		while (fin > debut) {
-			if (fseeko(fp, fin, SEEK_SET) != 0)
+		end = ftello(fp) - 1;
+		start = 0;
+		while (end > start) {
+			if (fseeko(fp, end, SEEK_SET) != 0)
 				break;
-			caractere = fgetc(fp);
-			if (fseeko(fp, debut, SEEK_SET) != 0)
+			character = fgetc(fp);
+			if (fseeko(fp, start, SEEK_SET) != 0)
 				break;
-			echange = fgetc(fp);
-			if (fseeko(fp, debut, SEEK_SET) != 0)
+			swap = fgetc(fp);
+			if (fseeko(fp, start, SEEK_SET) != 0)
 				break;
-			fputc(caractere, fp);
-			if (fseeko(fp, fin, SEEK_SET) != 0)
+			fputc(character, fp);
+			if (fseeko(fp, end, SEEK_SET) != 0)
 				break;
-			fputc(echange, fp);
-			fin --;
-			debut ++;	
+			fputc(swap, fp);
+			end --;
+			start ++;	
 		}
 		fclose(fp);
 	}

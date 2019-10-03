@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-sigpending.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,50 +10,44 @@
 #include <errno.h>
 #include <unistd.h>
 
-#ifdef _POSIX_REALTIME_SIGNALS
-	#define NB_SIG_CLASSIQUES	SIGRTMIN
-#else
-	#define NB_SIG_CLASSIQUES	SIGRTMIN
-#endif
-
-void gestionnaire (int numero)
+void signal_handler(int num)
 {
-	fprintf(stdout, "%d (%s) recu\n", numero, sys_siglist[numero]);
+	fprintf(stdout, "received %d (%s)\n", num, sys_siglist[num]);
 }
 
 int main (void)
 {
 	int i;
 	struct sigaction action;
-	sigset_t ensemble;
+	sigset_t set;
 
-	action.sa_handler = gestionnaire;
-	sigfillset (& (action . sa_mask));
+	action.sa_handler = signal_handler;
+	sigfillset (&(action.sa_mask));
 	action.sa_flags = 0; /* Pas de SA_RESTART */
 	for (i = 1; i < NSIG; i ++)
-		if (sigaction(i, & action, NULL) != 0)
-			fprintf(stderr, "%ld : %d pas capture\n",
+		if (sigaction(i, &action, NULL) != 0)
+			fprintf(stderr, "%ld : %d not handled\n",
 					(long) getpid(), i);
 
 	/* On bloque tout sauf SIGINT */
-	sigfillset(& ensemble);
-	sigdelset(& ensemble, SIGINT);
-	sigprocmask(SIG_BLOCK, & ensemble, NULL);
+	sigfillset(&set);
+	sigdelset(&set, SIGINT);
+	sigprocmask(SIG_BLOCK, &set, NULL);
 
-	/* un appel systeme lent bloque */
-	read(0, & i, sizeof(int));
-	
+	/* un appel systeme bloque */
+	read(0, &i, sizeof(int));
+
 	/* Voyons maintenant qui est en attente */
-	sigpending(& ensemble);
-	for (i = 1; i < NB_SIG_CLASSIQUES; i ++)
-		if (sigismember(& ensemble, i))
-			fprintf(stdout, "en attente %d (%s)\n", 
+	sigpending(&set);
+	for (i = 1; i < SIGRTMIN; i ++)
+		if (sigismember(&set, i))
+			fprintf(stdout, "%d (%s) is waiting\n", 
 				i, sys_siglist[i]);
 
 	/* On debloque tous les signaux pour les voir arriver */
-	sigemptyset(& ensemble);
-	sigprocmask(SIG_SETMASK, & ensemble, NULL);
-	
+	sigemptyset(&set);
+	sigprocmask(SIG_SETMASK, &set, NULL);
+
 	return EXIT_SUCCESS;
 }
 

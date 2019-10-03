@@ -1,16 +1,16 @@
 // ------------------------------------------------------------------
 // exemple-ungetc.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-void	lecture_numerique   (FILE * fp);
-void	lecture_alphabetique(FILE * fp);
+void get_digit(FILE * fp);
+void get_alpha(FILE * fp);
 
 int main (void)
 {
@@ -18,37 +18,33 @@ int main (void)
 	while ((c = getc(stdin)) != EOF) {
 		if (isdigit(c)) {
 			ungetc(c, stdin);
-			lecture_numerique(stdin);
+			get_digit(stdin);
 		} else if (isalpha(c)) {
 			ungetc(c, stdin);
-			lecture_alphabetique(stdin);
+			get_alpha(stdin);
 		}
 	}
 	return EXIT_SUCCESS;
 }
 
-void lecture_numerique (FILE * fp)
+void get_digit (FILE * fp)
 {
-	int	c;
+	int c;
+
 	fprintf(stdout, "Lecture numerique : ");
-	while (1) {
-		c = getc(fp);
-		if (! isdigit(c))
-			break;
+	while (isdigit(c = getc(fp))) {
 		fprintf(stdout, "%c", c);
 	}
 	ungetc(c, fp);
 	fprintf(stdout, "\n");
 }
-	
-void lecture_alphabetique (FILE * fp)
+
+void get_alpha (FILE * fp)
 {
-	int	c;
+	int c;
+
 	fprintf(stdout, "Lecture alphabetique : ");
-	while (1) {
-		c = getc(fp);
-		if (! isalpha(c))
-			break;
+	while (isalpha(c = getc(fp))) {
 		fprintf(stdout, "%c", c);
 	}
 	ungetc(c, fp);

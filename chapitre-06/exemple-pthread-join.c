@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-pthread-join-1.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <pthread.h>
@@ -10,14 +10,15 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void * fonction_thread(void * arg);
+void *thread_function(void *arg);
 
-int main (int argc, char * argv[])
+int main (int argc, char *argv[])
 {
-	pthread_t * thr = NULL;
-	void * ptr;
+	pthread_t *thr = NULL;
+	void *ptr;
 	int i;
 	long n;
+
 	thr = calloc(argc - 1, sizeof(pthread_t));
 	if (thr == NULL) {
 		perror("calloc");
@@ -25,8 +26,8 @@ int main (int argc, char * argv[])
 	}
 	for (i = 1; i < argc; i ++) {
 		n = atol(argv[i]);
-		if (pthread_create(& thr[i-1], NULL, fonction_thread, (void *) n) != 0) {
-			fprintf(stderr, "Erreur dans pthread_create\n");
+		if (pthread_create(& thr[i-1], NULL, thread_function, (void *) n) != 0) {
+			fprintf(stderr, "Error during pthread_create()\n");
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -37,7 +38,8 @@ int main (int argc, char * argv[])
 	return EXIT_SUCCESS;
 }
 
-void * fonction_thread(void * arg)
+
+void *thread_function(void *arg)
 {
 	long num = (long) arg;
 	return (void *) (num * num);

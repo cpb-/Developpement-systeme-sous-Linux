@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-setitimer-1.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -12,11 +12,11 @@
 #include <sys/time.h>
 #include <sys/wait.h>
 
-unsigned long int       mode_utilisateur;
-unsigned long int       mode_utilisateur_et_noyau;
+unsigned long int  user;
+unsigned long int  user_and_kernel;
 
-void    gestionnaire_signaux    (int numero);
-void    action_a_mesurer        (void);
+void signal_handler(int signum);
+void function_to_profile(void);
 
 int main (void)
 {
@@ -29,37 +29,37 @@ int main (void)
 	timer.it_interval.tv_usec = 10000; /* 1/100 s. */
 
 	/* Installation du gestionnaire de signaux */
-	signal(SIGVTALRM, gestionnaire_signaux);
-	signal(SIGPROF, gestionnaire_signaux);
+	signal(SIGVTALRM, signal_handler);
+	signal(SIGPROF, signal_handler);
 	/* Programmation des timers */
-	if ((setitimer(ITIMER_VIRTUAL, & timer, NULL) != 0)
-	 || (setitimer(ITIMER_PROF, & timer, NULL) != 0)) {
-		fprintf(stderr, "Erreur dans setitimer \n");
+	if ((setitimer(ITIMER_VIRTUAL, &timer, NULL) != 0)
+	 || (setitimer(ITIMER_PROF, &timer, NULL) != 0)) {
+		fprintf(stderr, "Error during setitimer \n");
 		return EXIT_FAILURE;
 	}	
 	/* Appel de la routine de travail effectif du processus */
-	action_a_mesurer();
+	function_to_profile();
 
 	/* Desinstallation des timers */
 	setitimer(ITIMER_VIRTUAL, NULL, NULL);
 	setitimer(ITIMER_PROF, NULL, NULL);
-	fprintf(stdout, "Temps passe en mode utilisateur : %ld/100 s \n",
-		mode_utilisateur);
-	fprintf(stdout, "Temps passe en mode noyau : %ld/100 s \n",
-		mode_utilisateur_et_noyau - mode_utilisateur);
+	fprintf(stdout, "User mode time : %ld/100 s \n",
+		user);
+	fprintf(stdout, "Kernel mode time : %ld/100 s \n",
+		user_and_kernel - user);
 	return EXIT_SUCCESS;
 }
 
-void gestionnaire_signaux (int numero)
+void signal_handler(int signum)
 {
-	if (numero == SIGVTALRM)
-		mode_utilisateur ++;
+	if (signum == SIGVTALRM)
+		user ++;
 	else 
-		mode_utilisateur_et_noyau ++;
+		user_and_kernel ++;
 }
 
 
-void action_a_mesurer (void)
+void function_to_profile(void)
 {
 	int i, j;
 	FILE * fp1, * fp2;

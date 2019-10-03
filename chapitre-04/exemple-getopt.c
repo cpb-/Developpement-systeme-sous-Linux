@@ -1,23 +1,22 @@
 // ------------------------------------------------------------------
 // exemple-getopt.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
 #include <unistd.h>
 
-int main (int argc, char * argv [])
+int main (int argc, char * argv[])
 {
 
-	char *	liste_options = "abc:XY";
-	int	option;
+	char *opt_list = "abc:XY";
+	int   option;
 
 	opterr = 0; /* Pas de message d'erreur automatique */
 
-	while ((option = getopt(argc, argv, liste_options)) != -1) {
-		
+	while ((option = getopt(argc, argv, opt_list)) != -1) {
 		switch (option) {
 
 			case 'a' :
@@ -34,7 +33,7 @@ int main (int argc, char * argv [])
 				fprintf(stdout, "Option %c\n", option);
 				break;
 			case '?' :
-				fprintf(stderr, "Option %c fausse\n", optopt);
+				fprintf(stderr, "Wrong option %c\n", optopt);
 				break;
 		}
 	}
@@ -44,6 +43,6 @@ int main (int argc, char * argv [])
 		while (optind != argc)
 			fprintf(stdout, "  %s\n", argv[optind ++]);
 	}
-	
+
 	return 0;
 }

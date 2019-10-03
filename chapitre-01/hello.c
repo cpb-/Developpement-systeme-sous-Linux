@@ -1,8 +1,9 @@
-	#include <stdio.h>
+#include <stdio.h>
 
 int main (int argc, char * argv [])
 {
 	int i;
+
 	fprintf (stdout, "Hello world ! ");
 	if (argc > 1)
 	{

@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-mutex-type-3.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 
@@ -15,9 +15,8 @@ pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
 
 int main (void)
 {
-	int ret;
-	fprintf(stderr, "Je deverrouille le mutex...");
-	ret = pthread_mutex_unlock(& mtx);
-	fprintf(stderr, "retour %d\n", ret);
+	fprintf(stderr, "pthread_mutex_unlock(): %d\n",
+		pthread_mutex_unlock(&mtx));
+
 	pthread_exit(NULL);
 }

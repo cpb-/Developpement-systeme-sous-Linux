@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-scandir.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <dirent.h>
@@ -10,38 +10,38 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-regex_t	motif_recherche;
+regex_t	pattern;
 
-int selection (const struct dirent * entree)
+int selection(const struct dirent * entry)
 {
-	if (regexec(& motif_recherche, entree->d_name, 0, NULL, 0) == 0)
+	if (regexec(& pattern, entry->d_name, 0, NULL, 0) == 0)
 		return 1;
 	return 0;
 }
 
 int main (int argc, char * argv[])
 {
-	struct dirent ** liste;
-	int    nb_entrees;
+	struct dirent **list;
+	int    nb_entries;
 	int    i;
 
 	if (argc != 3) {
 		fprintf(stderr, "Syntaxe : %s repertoire motif\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
-	if (regcomp(& motif_recherche, argv[2], REG_NOSUB) !=0) {
+	if (regcomp(& pattern, argv[2], REG_NOSUB) !=0) {
 		fprintf(stderr, "Motif illegal\n");
 		exit(EXIT_FAILURE);
 	}
-	nb_entrees = scandir(argv[1], & liste, selection, alphasort);
-	if (nb_entrees <= 0)
+	nb_entries = scandir(argv[1], & list, selection, alphasort);
+	if (nb_entries <= 0)
 		return EXIT_SUCCESS;
-	for (i = 0; i < nb_entrees; i ++) {
-		fprintf(stdout, "  %s\n", liste[i]->d_name);
-		free(liste[i]);
+	for (i = 0; i < nb_entries; i ++) {
+		fprintf(stdout, "  %s\n", list[i]->d_name);
+		free(list[i]);
 	}
 	fprintf(stdout, "\n");
-	free(liste);
+	free(list);
 
 	return EXIT_SUCCESS;
 }

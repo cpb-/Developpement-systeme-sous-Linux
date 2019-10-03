@@ -14,7 +14,6 @@ EXECUTABLES=	exemple-fgetc       \
 		exemple-getchar     \
 		exemple-getwchar    \
 		exemple-getline     \
-		exemple-pile        \
 		exemple-puts        \
 		exemple-scanf-1     \
 		exemple-scanf-2     \

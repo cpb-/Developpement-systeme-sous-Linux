@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-pipe-2.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -12,12 +12,12 @@
 
 int main (void)
 {
-	int tube[2];
+	int pipe_fd[2];
 	unsigned char buffer[256];
 	int i;
 
-	fprintf(stdout, "Creation tube\n");
-	if (pipe(tube) != 0) {
+	fprintf(stdout, "Creation pipe\n");
+	if (pipe(pipe_fd) != 0) {
 		perror("pipe");
 		exit(EXIT_FAILURE);
 	}
@@ -27,33 +27,34 @@ int main (void)
 			exit(EXIT_FAILURE);
 			break;
 		case 0 :
-			fprintf(stdout, "Fils : Fermeture entree\n");
-			close(tube[1]);
-			fprintf(stdout, "Fils : Lecture tube\n");
-			if (read(tube[0], buffer, 256) != 256) {
+			fprintf(stdout, "Enfant : Fermeture entree\n");
+			close(pipe_fd[1]);
+			fprintf(stdout, "Enfant : Lecture pipe\n");
+			if (read(pipe_fd[0], buffer, 256) != 256) {
 				perror("read");
 				exit(EXIT_FAILURE);
 			}
-			fprintf(stdout, "Fils : Verification \n");
+			fprintf(stdout, "Enfant : Verification \n");
 			for (i = 0; i < 256; i ++)
 				if (buffer[i] != i) {
-					fprintf(stdout, "Fils : Erreur\n");
+					fprintf(stdout, "Enfant : Erreur\n");
 					exit(EXIT_FAILURE);
 				}
-			fprintf(stdout, "Fils : Ok\n");
+			fprintf(stdout, "Enfant : Ok\n");
 			break;
 		default :
-			fprintf(stdout, "Pere : Fermeture sortie\n");
-			close(tube[0]);
+			fprintf(stdout, "Parent : Fermeture sortie\n");
+			close(pipe_fd[0]);
 			for (i = 0; i < 256; i ++)
 				buffer[i] = i;
-			fprintf(stdout, "Pere : Ecriture dans tube\n");
-			if (write(tube[1], buffer, 256) != 256) {
+			fprintf(stdout, "Parent : Ecriture dans pipe\n");
+			if (write(pipe_fd[1], buffer, 256) != 256) {
 				perror("write");
 				exit(EXIT_FAILURE);
 			}
 			wait(NULL);
 			break;
 	}
+
 	return EXIT_SUCCESS;
 }

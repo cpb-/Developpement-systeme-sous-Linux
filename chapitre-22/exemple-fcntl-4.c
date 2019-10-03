@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-fcntl-4.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <fcntl.h>
@@ -12,8 +12,8 @@
 
 int main (int argc, char * argv[])
 {
-	char    chaine[80];
-	int             fd;
+	char   string[80];
+	int    fd;
 	struct flock flock;
 	
 	if (argc != 2) {
@@ -37,8 +37,9 @@ int main (int argc, char * argv[])
 		exit(EXIT_FAILURE);
 	}
 	fprintf(stdout, "Verrou OK\n");
-	fgets(chaine, 80, stdin);
+	fgets(string, 80, stdin);
 	close(fd);
+
 	return EXIT_SUCCESS;
 }
 

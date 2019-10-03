@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-strfmon.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <locale.h>
@@ -14,6 +14,7 @@ int main (int argc, char * argv[])
 {
 	double d;
 	char   buffer[80];
+
 	setlocale(LC_ALL, "");
 	if ((argc != 3) 
 	 || (sscanf(argv[2], "%lf", & d) != 1)) {
@@ -22,5 +23,6 @@ int main (int argc, char * argv[])
 	}
 	if (strfmon(buffer, 80, argv[1], d) >0)
 		fprintf(stdout, "%s\n", buffer);
+
 	return EXIT_SUCCESS;
 }

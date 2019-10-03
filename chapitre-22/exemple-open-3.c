@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-open-3.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <errno.h>
@@ -15,42 +15,42 @@
 #include <sys/stat.h>
 
 
-FILE * fopen_exclusif (const char * nom_fichier, const char * mode_flux)
+FILE * exclusive_fopen(const char *name, const char *mode)
 {
-	int	lecture		= 0;
-	int	ecriture	= 0;
-	int	ajout		= 0;
-	int	creation	= 0;
-	int	troncature	= 0;
-	int	flags		= 0;
+	int	can_read = 0;
+	int	can_write = 0;
+	int	append = 0;
+	int	creation = 0;
+	int	troncate = 0;
+	int	flags = 0;
 	int	i;
 	int	fd;
 	FILE *	fp;
 
-	for (i = 0; i < strlen(mode_flux); i ++) {
-		switch (mode_flux[i]) {
+	for (i = 0; i < strlen(mode); i ++) {
+		switch (mode[i]) {
 			case 'a' :
-				ecriture = lecture = ajout = 1;
+				can_write = can_read = append = 1;
 				break;
 			case 'r' :
-				lecture = 1;
+				can_read = 1;
 				break;
 			case 'w' :
-				ecriture = creation = troncature = 1;
+				can_write = creation = troncate = 1;
 				break;
 			case '+' :
-				ecriture = lecture = 1;
+				can_write = can_read = 1;
 				break;
 			default :
 				// soyons tolerants... on ne dit rien
 				break;
 		}
 	}
-	if (lecture & ecriture)
+	if (can_read & can_write)
 		flags = O_RDWR;
-	else if (lecture)
+	else if (can_read)
 		flags = O_RDONLY;
-	else if (ecriture)
+	else if (can_write)
 		flags = O_WRONLY;
 	else {
 		errno = EINVAL;
@@ -58,25 +58,28 @@ FILE * fopen_exclusif (const char * nom_fichier, const char * mode_flux)
 	}
 	if (creation)
 		flags |= O_CREAT;
-	if (troncature)
+	if (troncate)
 		flags |= O_TRUNC;
 	flags |= O_EXCL;
-	fd = open(nom_fichier, flags, 0644);
+	fd = open(name, flags, 0644);
 	if (fd < 0)
 		return NULL;
-	fp = fdopen(fd, mode_flux);
+	fp = fdopen(fd, mode);
+
 	return fp;
 }
 
-void ouverture (const char * nom, const char * mode, int exclusif)
+
+void open_file(const char *name, const char *mode, int exclusif)
 {
 	FILE * fp;
+
 	fprintf(stderr, "Ouverture %sde %s, mode %s : ", 
-		(exclusif ? "exclusive " : ""), nom, mode);
+		(exclusif ? "exclusive " : ""), name, mode);
 	if (exclusif)
-		fp = fopen_exclusif(nom, mode);
+		fp = exclusive_fopen(name, mode);
 	else
-		fp = fopen(nom, mode);
+		fp = fopen(name, mode);
 	if (fp == NULL)
 		perror("");
 	else {
@@ -87,8 +90,9 @@ void ouverture (const char * nom, const char * mode, int exclusif)
 
 int main (void)
 {
-	ouverture("essai.open_3", "w+", 1);
-	ouverture("essai.open_3", "w+", 1);
-	ouverture("essai.open_3", "w+", 0);
+	open_file("essai.open_3", "w+", 1);
+	open_file("essai.open_3", "w+", 1);
+	open_file("essai.open_3", "w+", 0);
+
 	return EXIT_SUCCESS;
 }

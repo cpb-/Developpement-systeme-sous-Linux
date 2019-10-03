@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-fchdir.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <errno.h>
@@ -12,41 +12,41 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-void affiche_chemin_courant (void)
+void display_current_path(void)
 {
-	char * chemin = NULL;
-	char * nouveau = NULL;
-	int    taille = 16;
+	char *path = NULL;
+	char *reallocated = NULL;
+	int   size = 16;
 
 	while (1) {	
-		if ((nouveau = realloc(chemin, taille)) == NULL) {
+		if ((reallocated = realloc(path, size)) == NULL) {
 			perror("realloc");
 			break;
 		}
-		chemin = nouveau;
-		if (getcwd(chemin, taille) != NULL) {
-			fprintf(stdout, "%s\n", chemin);
+		path = reallocated;
+		if (getcwd(path, size) != NULL) {
+			fprintf(stdout, "%s\n", path);
 			break;
 		}
 		if (errno != ERANGE) {
 			perror("getcwd");
 			break;
 		}
-		taille *= 2;
+		size *= 2;
 	}
-	if (chemin != NULL)
-		free(chemin);
+	if (path != NULL)
+		free(path);
 }
 
-void change_chemin_courant(const char * nom)
+void change_directory(const char * name)
 {
 	int  fd;
-	if ((fd = open(nom, O_RDONLY)) < 0) {
-		perror(nom);
+	if ((fd = open(name, O_RDONLY)) < 0) {
+		perror(name);
 		return ;
 	}
 	if (fchdir(fd) < 0)
-		perror(nom);
+		perror(name);
 	close(fd);
 }
 
@@ -54,10 +54,10 @@ int main (int argc, char * argv[])
 {
 	int i;
 	
-	affiche_chemin_courant();
+	display_current_path();
 	for (i = 1; i < argc; i++) {
-		change_chemin_courant(argv[i]);
-		affiche_chemin_courant();
+		change_directory(argv[i]);
+		display_current_path();
 	}
 	return EXIT_SUCCESS;
 }

@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-mutex-type-4.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #define _XOPEN_SOURCE 500 
@@ -13,31 +13,32 @@
 
 pthread_mutex_t mtx;
 
-void * fonction_thread(void * arg);
+void * thread_function(void * arg);
 
 int main (void)
 {
 	pthread_t thr;
 	pthread_mutexattr_t attr; 
-	pthread_mutexattr_init(& attr); 
-	pthread_mutexattr_settype(& attr, PTHREAD_MUTEX_ERRORCHECK); 
-	pthread_mutex_init(& mtx, & attr); 
-	pthread_mutex_lock(& mtx);
-	pthread_create(& thr, NULL, fonction_thread, NULL);
+
+	pthread_mutexattr_init(&attr); 
+	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK); 
+	pthread_mutex_init(&mtx, &attr); 
+	pthread_mutex_lock(&mtx);
+	pthread_create(&thr, NULL, thread_function, NULL);
 	pause();
+
 	pthread_exit(NULL);
 }
 
-void * fonction_thread(void * arg)
+
+void * thread_function(void * arg)
 {
-	int ret;
-	fprintf(stderr, "Thread deverrouille le mutex : ");
-	ret = pthread_mutex_unlock(& mtx);
-	fprintf(stderr, "resultat %d\n", ret);
 	sleep(1);
-	fprintf(stderr, "Thread re-verrouille le mutex : ");
-	ret = pthread_mutex_lock(& mtx);
-	fprintf(stderr, "resultat %d\n", ret);
+	fprintf(stderr, "pthread_mutex_unlock() : %d\n",
+		pthread_mutex_unlock(&mtx));
+	sleep(1);
+	fprintf(stderr, "pthread_mutex_lock() : ");
+	fprintf(stderr, "%d\n",
+		pthread_mutex_lock(&mtx));
 	pthread_exit(NULL);
 }
-

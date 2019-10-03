@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-system-shell.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <limits.h>
@@ -13,13 +13,15 @@
 
 int main(void)
 {
-	char ligne[MAX_CANON];
+	char string[MAX_CANON];
+
 	while (1) {
 		fprintf(stderr, "-> ");
-		if (fgets(ligne, MAX_CANON, stdin) == NULL)
+		if (fgets(string, MAX_CANON, stdin) == NULL)
 			break;
-		system(ligne);
+		system(string);
 	}
+
 	return 0;
 }
 

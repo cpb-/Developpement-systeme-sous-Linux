@@ -1,22 +1,22 @@
 // ------------------------------------------------------------------
 // exemple-siglongjmp.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <setjmp.h>
 
-sigjmp_buf	contexte;
+sigjmp_buf	context;
 
-void gestionnaire_sigfpe (int numero)
+void signal_handler(int num)
 {
-	siglongjmp(contexte, 1);
+	siglongjmp(context, 1);
 	/* Si l'on est ici le saut a rate, il faut quitter */
-	signal(numero, SIG_DFL);
-	raise(numero);
+	signal(num, SIG_DFL);
+	raise(num);
 }
 
 int main (void)
@@ -25,13 +25,13 @@ int main (void)
 
 	struct sigaction action;
 
-	action.sa_handler = gestionnaire_sigfpe;
+	action.sa_handler = signal_handler;
 	action.sa_flags = 0;
 	sigfillset(& action.sa_mask);
 	sigaction(SIGFPE, & action, NULL);
 
 	while (1) {
-		if (sigsetjmp(contexte, 1) != 0) {
+		if (sigsetjmp(context, 1) != 0) {
 			/* On est arrive ici par siglongjmp() */
 			fprintf(stdout, "Aie ! erreur mathematique ! \n");
 			fflush(stdout);

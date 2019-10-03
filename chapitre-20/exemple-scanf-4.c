@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-scanf-4.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -10,13 +10,16 @@
 
 int main (void)
 {
-	char ligne[128];
+	char string[128];
 	int i;
+
 	do {
 		printf("Veuillez entrer un entier : ");
-		if (fgets(ligne, 128, stdin) == NULL)
+		if (fgets(string, 128, stdin) == NULL)
 			return EXIT_FAILURE;
-	} while (sscanf(ligne, "%d", & i) != 1);
+	} while (sscanf(string, "%d", & i) != 1);
+
 	printf ("Ok, vous avez saisi : %d\n", i);
+
 	return EXIT_SUCCESS;
 }

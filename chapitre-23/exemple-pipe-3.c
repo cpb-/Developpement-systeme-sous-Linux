@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-pipe-3.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -11,14 +11,14 @@
 
 int main (int argc, char * argv[])
 {
-	int	tube[2];
+	int	pipe_fd[2];
 
 	if (argc != 3) {
 		fprintf(stderr, "Syntaxe : %s commande_1 commande_2\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
 
-	if (pipe(tube) != 0) {
+	if (pipe(pipe_fd) != 0) {
 		perror("pipe");
 		exit(EXIT_FAILURE);
 	}
@@ -28,16 +28,17 @@ int main (int argc, char * argv[])
 			exit(EXIT_FAILURE);
 			break;
 		case 0 :
-			close(tube[0]);
-			dup2(tube[1], STDOUT_FILENO);
+			close(pipe_fd[0]);
+			dup2(pipe_fd[1], STDOUT_FILENO);
 			system(argv[1]);
 			break;
 		default :
-			close(tube[1]);
-			dup2(tube[0], STDIN_FILENO);
+			close(pipe_fd[1]);
+			dup2(pipe_fd[0], STDIN_FILENO);
 			system(argv[2]);
 			break;
 	}
+
 	return EXIT_SUCCESS;
 }
 

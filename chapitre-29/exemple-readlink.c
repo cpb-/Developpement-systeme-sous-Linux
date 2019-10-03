@@ -1,46 +1,49 @@
 // ------------------------------------------------------------------
 // exemple-readlink.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-void lecture_contenu (const char * nom)
+void read_content(const char *name)
 {
-	char *  buffer = NULL;
-	char *  nouveau = NULL;
-	int	taille = 0;
-	int	nb_copies;
+	char *buffer = NULL;
+	char *reallocated_buffer = NULL;
+	int	size = 0;
+	int	written;
 
 	while (1) {
-		taille += 16;
-		if ((nouveau = realloc(buffer, taille)) == NULL) {
-			perror(nom);
+		size += 16;
+		if ((reallocated_buffer = realloc(buffer, size)) == NULL) {
+			perror(name);
 			break;
 		}
-		buffer = nouveau;
-		if ((nb_copies = readlink(nom, buffer, taille - 1)) == -1) {
-			perror(nom);
+		buffer = reallocated_buffer;
+		if ((written = readlink(name, buffer, size - 1)) == -1) {
+			perror(name);
 			break;
 		}
-		if (nb_copies < taille - 1) {
-			buffer[nb_copies] = '\0';
-			fprintf(stdout, "%s : %s\n", nom, buffer);
+		if (written < size - 1) {
+			buffer[written] = '\0';
+			fprintf(stdout, "%s : %s\n", name, buffer);
 			break;
 		}
 	}
 	free(buffer);
 }
 
+
 int main (int argc, char * argv[])
 {
-	int 	i;
+	int i;
+
 	for (i = 1; i < argc; i ++)
-		lecture_contenu(argv[i]);
+		read_content(argv[i]);
+
 	return EXIT_SUCCESS;
 }
 

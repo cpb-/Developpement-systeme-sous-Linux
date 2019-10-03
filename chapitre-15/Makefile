@@ -2,8 +2,7 @@ SHELL=/bin/sh
 
 CFLAGS = -Wall -g
 
-EXECUTABLES=	cree-gros-fichier		\
-		exemple-mmap-1			\
+EXECUTABLES=	exemple-mmap-1			\
 		exemple-mmap-2			\
 		exemple-mprotect-1		\
 		exemple-mprotect-2		\

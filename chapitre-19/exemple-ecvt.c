@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-ecvt.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -10,27 +10,27 @@
 
 int main (int argc, char * argv[])
 {
-	double valeur;
-	int    nb_chiffres;
+	double value;
+	int    digits;
 	int    position;
-	int    signe;
-	char * retour;
+	int    sign;
+	char * string;
 	
 	if ((argc != 3) 
-	 || (sscanf(argv[1], "%lf", & valeur) != 1)
-	 || (sscanf(argv[2], "%d", & nb_chiffres) != 1)) {
-		fprintf(stderr, "Syntaxe : %s valeur nb_chiffres \n", argv[0]);
+	 || (sscanf(argv[1], "%lf", &value) != 1)
+	 || (sscanf(argv[2], "%d", &digits) != 1)) {
+		fprintf(stderr, "Syntaxe : %s value digits\n", argv[0]);
 		exit (EXIT_FAILURE);
 	}
-	retour = ecvt(valeur, nb_chiffres, & position, & signe);
-	fprintf(stdout, "ecvt() = %s \n", retour);
+	string = ecvt(value, digits, &position, &sign);
+	fprintf(stdout, "ecvt() = %s \n", string);
 	fprintf(stdout, "    position = %d \n", position);
-	fprintf(stdout, "    signe = %d \n", signe);
+	fprintf(stdout, "    sign = %d \n", sign);
 
-	retour = fcvt(valeur, nb_chiffres, & position, & signe);
-	fprintf(stdout, "fcvt() = %s \n", retour);
+	string = fcvt(value, digits, &position, &sign);
+	fprintf(stdout, "fcvt() = %s \n", string);
 	fprintf(stdout, "    position = %d \n", position);
-	fprintf(stdout, "    signe = %d \n", signe);
+	fprintf(stdout, "    sign = %d \n", sign);
 
 	return EXIT_SUCCESS;
 }

@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // exemple-localeconv.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <locale.h>
@@ -11,7 +11,8 @@
 
 int main (void)
 {
-	struct lconv * lconv;
+	struct lconv *lconv;
+
 	setlocale(LC_ALL, "");
 	lconv = localeconv();
 	printf("decimal_point     = %s \n", lconv->decimal_point);
@@ -30,6 +31,7 @@ int main (void)
 	printf("n_cs_precedes     = %d \n", lconv->n_cs_precedes);
 	printf("n_sep_by_space    = %d \n", lconv->n_sep_by_space);
 	printf("n_sign_posn       = %d \n", lconv->n_sign_posn);
+
 	return EXIT_SUCCESS;
 }
 

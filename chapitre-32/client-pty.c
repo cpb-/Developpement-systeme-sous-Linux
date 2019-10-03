@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------
 // client-pty.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdio.h>
@@ -18,104 +18,103 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-#define LG_BUFFER	1024
+#define BUFFER_SIZE    1024
 
 
-int lecture_arguments (int argc, char * argv [], struct sockaddr_in * adresse, char * protocole);
+int parse_args(int argc, char *argv [], struct sockaddr_in *address, char *protocol);
 
 int main (int argc, char * argv[])
 {
 	int                sock;
-	struct sockaddr_in adresse;
-	char               buffer[LG_BUFFER];
-	int                nb_lus;
+	struct sockaddr_in address;
+	char               buffer[BUFFER_SIZE];
+	int                count;
 	struct termios     termios_stdin, termios_raw;
-	
 	fd_set  set;
 	
-	if (lecture_arguments(argc, argv, & adresse, "tcp") < 0)
+	if (parse_args(argc, argv, &address, "tcp") < 0)
 		exit(EXIT_FAILURE);
-	adresse.sin_family = AF_INET;
+	address.sin_family = AF_INET;
 	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		perror("socket");
 		exit(EXIT_FAILURE);
 	}
-	if (connect(sock, (struct sockaddr *) & adresse, sizeof(struct sockaddr_in)) < 0) {
+	if (connect(sock, (struct sockaddr *) &address, sizeof(struct sockaddr_in)) < 0) {
 		perror("connect");
 		exit(EXIT_FAILURE);
 	}
-	tcgetattr(STDIN_FILENO, & termios_stdin);
-	tcgetattr(STDIN_FILENO, & termios_raw);
+	tcgetattr(STDIN_FILENO, &termios_stdin);
+	tcgetattr(STDIN_FILENO, &termios_raw);
 	cfmakeraw(& termios_raw);
-	tcsetattr(STDIN_FILENO, TCSANOW, & termios_raw);
+	tcsetattr(STDIN_FILENO, TCSANOW, &termios_raw);
 
 	while (1) {
-		FD_ZERO(& set);
-		FD_SET(sock, & set);
-		FD_SET(STDIN_FILENO, & set);
-		if (select(sock + 1, & set, NULL, NULL, NULL) < 0)
+		FD_ZERO(&set);
+		FD_SET(sock, &set);
+		FD_SET(STDIN_FILENO, &set);
+		if (select(sock + 1, &set, NULL, NULL, NULL) < 0)
 			break;
-		if (FD_ISSET(sock, & set)) {
-			if ((nb_lus = read(sock, buffer, LG_BUFFER)) == 0)
+		if (FD_ISSET(sock, &set)) {
+			if ((count = read(sock, buffer, BUFFER_SIZE)) == 0)
 				break;
-			write(STDOUT_FILENO, buffer, nb_lus);
+			write(STDOUT_FILENO, buffer, count);
 		}
-		if (FD_ISSET(STDIN_FILENO, & set)) {
-			if ((nb_lus = read(STDIN_FILENO, buffer, LG_BUFFER)) == 0)
+		if (FD_ISSET(STDIN_FILENO, &set)) {
+			if ((count = read(STDIN_FILENO, buffer, BUFFER_SIZE)) == 0)
 				break;
-			write(sock, buffer, nb_lus);
+			write(sock, buffer, count);
 		}
 	}
-	tcsetattr(STDIN_FILENO, TCSANOW, & termios_stdin);
+	tcsetattr(STDIN_FILENO, TCSANOW, &termios_stdin);
 	return EXIT_SUCCESS;
 }
 
 
-int lecture_arguments (int argc, char * argv[], struct sockaddr_in * adresse, char * protocole)
+int parse_args (int argc, char *argv[], struct sockaddr_in *address, char *protocol)
 {
-	char * liste_options = "a:p:h";
+	char  *option_list = "a:p:h";
 	int    option;
 	
-	char * hote  = "localhost";
-	char * port = "2010";
+	char *host  = "localhost";
+	char *port = "1234";
 
-	struct hostent * hostent;
-	struct servent * servent;
+	struct hostent *hostent;
+	struct servent *servent;
 
-	int    numero;
+	int num;
 
-	while ((option = getopt(argc, argv, liste_options)) != -1) {
+	while ((option = getopt(argc, argv, option_list)) != -1) {
 		switch (option) {
 			case 'a' :
-				hote  = optarg;
+				host  = optarg;
 				break;
 			case 'p' :
 				port = optarg;
 				break;
 			case 'h' :
-				fprintf(stderr, "Syntaxe : %s [-a adresse] [-p port] \n", argv[0]);
+				fprintf(stderr, "Syntaxe : %s [-a address] [-p port] \n", argv[0]);
 				return -1;
 			default	: 
 				break;
 		}
 	}
-	memset(adresse, 0, sizeof(struct sockaddr_in));
-	if (inet_aton(hote, & (adresse->sin_addr)) == 0) {
-		if ((hostent = gethostbyname(hote)) == NULL) {
-			fprintf(stderr, "hote %s inconnu \n", hote);
+	memset(address, 0, sizeof(struct sockaddr_in));
+	if (inet_aton(host, &(address->sin_addr)) == 0) {
+		if ((hostent = gethostbyname(host)) == NULL) {
+			fprintf(stderr, "host %s inconnu \n", host);
 			return -1;
 		}
-		adresse->sin_addr.s_addr = ((struct in_addr *) (hostent->h_addr))->s_addr; 
+		address->sin_addr.s_addr = ((struct in_addr *) (hostent->h_addr))->s_addr; 
 	}
-	if (sscanf(port, "%d", & numero) == 1) {
-		adresse->sin_port = htons(numero);
+	if (sscanf(port, "%d", &num) == 1) {
+		address->sin_port = htons(num);
 		return 0;
 	}
-	if ((servent = getservbyname(port, protocole)) == NULL) {
+	if ((servent = getservbyname(port, protocol)) == NULL) {
 		fprintf(stderr, "Service %s inconnu \n", port);
 		return -1;
 	}
-	adresse->sin_port = servent->s_port;
+	address->sin_port = servent->s_port;
 	return 0;
 }
 

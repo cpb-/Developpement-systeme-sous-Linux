@@ -1,20 +1,20 @@
 // ------------------------------------------------------------------
 // exemple-exit-1.c
 // Fichier d'exemple du livre "Developpement Systeme sous Linux"
-// (C) 2000-2010 - Christophe BLAESS -Christophe.Blaess@Logilin.fr
-// http://www.logilin.fr
+// (C) 2000-2019 - Christophe BLAESS <christophe@blaess.fr>
+// https://www.blaess.fr/christophe/
 // ------------------------------------------------------------------
 
 #include <stdlib.h>
 
-void sortie (void);
+void quit(void);
 
 int main (void)
 {
-	sortie();
+	quit();
 }
 
-void sortie (void)
+void quit(void)
 {	
 	exit(EXIT_FAILURE);
 }
