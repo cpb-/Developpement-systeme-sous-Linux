@@ -2,7 +2,7 @@
 
 ## Exemples
 
-Exemples de mon livre (4ème édition, juillet 2016), publié aux éditions Eyrolles.
+Exemples de mon livre (5ème édition, octobre 2019), publié aux éditions Eyrolles.
 
 
 Pour plus de détails, voir (http://www.blaess.fr/christophe/livres/programmation-systeme-sous-linux/)
